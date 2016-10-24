@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Circles</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+		font: sans-serif; 
+
+      }
+	  .description {
+		font: 9pt sans-serif;  
+		margin:5px;
+	  } 
+	   h4 {
+		font: 150% sans-serif;
+		margin: 3px 0 3px 0;
+	   }
+	   span{
+		color: grey;
+		font-style: italic;
+	   }
+	  input{
+		padding: 3px;
+		margin: 5px 0 5px 0;
+	  }
+      #map {
+        height: 100%;
+      }
+	  #data{
+		width: 250px;
+	  }
+	  #ok, #del{
+		width: 70px;
+	  }
+    </style>
+  </head>
+  <body>
+	<div class="description">
+		<h4>Построение окружностей в заданной точке с заданным радиусом</h4>
+		Формат ввода: широта,долгота,радиус. Например, <span>51.661538,39.200271,300</span> .<br>
+		Кнопка "Добавить" или нажание Enter добавляет окружность.<br>
+		Кнопка "Удалить" удаляет последнюю окружность.<br>
+	</div>
+	<input type="text" name="Data" id="data" onkeypress="doEnter(event);" placeholder="51.661538,39.200271,300" />
+	<input id="ok" type="button" value="Добавить" onclick="setCircle();" />
+	<input id="del" type="button" value="Удалить" onclick="deleteCircle();" />
+    <div id="map"></div>
+    <script>
+
+	var citymap = [];
+	var map;
+	var defLat = 51.661538;
+	var defLng = 39.200271;
+	var infowindow
+
+	function initMap() {
+		  // Create the map.
+		map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 12,
+			center: {lat: defLat, lng: defLng},
+			mapTypeId: google.maps.MapTypeId.TERRAIN
+		});
+
+		if(citymap.length>0){
+			for (var city in citymap) {
+				// Add the circle for this city to the map.
+				drawCircle(citymap[city].center, citymap[city].radius);;
+			 }
+		}
+		
+		map.addListener('click', function(e) {
+			if(infowindow){infowindow.close()};
+			var pos = e.latLng+"";
+			
+			infowindow = new google.maps.InfoWindow({
+				content: pos.substring(1,pos.length-1),
+				position: e.latLng
+			});
+			infowindow.open(map);
+	    });
+	}
+
+
+	function setCircle(){
+		var data = document.getElementById("data").value;
+		if(data){
+			var mass = data.split(",");
+			var lt = Number(mass[0]);
+			var ln = Number(mass[1]);
+			var r = Number(mass[2]);
+			map.setCenter({lat: lt, lng: ln});
+			citymap.push({
+			center: {lat: lt, lng: ln},
+			radius: r
+			});
+			//document.getElementById("data").value = '';
+		}
+		var i = citymap.length -1;
+		// Add the circle for this city to the map.
+		drawCircle(citymap[i].center, citymap[i].radius);
+	}
+
+	
+	function drawCircle(latLng, radius){
+		var cityCircle = new google.maps.Circle({
+		  strokeColor: '#FF0000',
+		  strokeOpacity: 0.8,
+		  strokeWeight: 1,
+		  //fillColor: '#FF0000',
+		  fillOpacity: 0.1,
+		  map: map,
+		  center: latLng,
+		  radius: radius,
+		  clickable: false
+		});
+	}
+
+	function deleteCircle(){
+		var i = citymap.length - 1;
+		citymap.splice(i, 1);
+		initMap();
+		if(i>0){
+			map.setCenter({lat: citymap[i-1].center.lat, lng: citymap[i-1].center.lng});
+		}else{
+			map.setCenter({lat: defLat, lng: defLng});
+		}
+	}
+
+
+	function doEnter(e) {
+		var charCode;
+		if(e && e.which){
+			charCode = e.which;
+		}else if(window.event){
+			e = window.event;
+			charCode = e.keyCode;
+		}
+		if(charCode == 13) {
+			setCircle();
+		}
+	}
+
+
+	function setCenter(){
+		map.setCenter({lat: defLat, lng: defLng});
+	}
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU4bg11nqozgLoRXV6Bjk9lObfapGYvmU&signed_in=true&callback=initMap"></script>
+  </body>
+</html>
