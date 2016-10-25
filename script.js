@@ -6,6 +6,7 @@ $(function() {
 	admin();
 	clickCenter();
 	clickCloseModal();
+	carToCenter();
 });
 
 // Количество команд:
@@ -142,6 +143,13 @@ function clickCloseModal() {
 	});
 }
 
+function carToCenter() {
+	$(document).on('click', '.team', function (e) {
+         var $id = $(this).attr('data-car-id');
+		 gmap.panTo(teamMarkers[$id].position);
+	});
+}
+
 //-----Вспомогательные функции-----------//
 
 function addToArray(pos){
@@ -269,7 +277,7 @@ function markersRefresh() {
 function createGMap() {
 	//todo: поправить и перенести в метож init
 	for (var m = 0; m < teamCount; ++m) {
-		$('.teams').append('<li class="team"><img src=\"img/car_'+m+'.svg\" class="team_image"> '+getTeamsInfo(m) + '   <span class=\"team_data\">…</span></li>');
+		$('.teams').append('<li class="team" data-car-id=\"' + m + '\" ><img src=\"img/car_'+m+'.svg\" class="team_image"> '+getTeamsInfo(m) + '   <span class=\"team_data\">…</span></li>');
 	}
 	//----
     var latlng = {lat: 51.661538, lng: 39.200271},
@@ -417,7 +425,7 @@ function doRefresh(teamId) {
 			}
 		}
 	
-	}
+	};
 	
 	var path = "position/team"+teamId+".php?"+ Math.random();
 	xhr.open("GET", path,  true);
