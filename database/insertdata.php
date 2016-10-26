@@ -1,4 +1,10 @@
 <?php
+
+	$servername = "localhost";
+	$username = "dzrcctk_maks";
+	$password = "Iskra66!";
+	$dbname = "dzrcctk_db";
+
 	$json_data = json_decode(file_get_contents('php://input'));
 	$id = $json_data->{"id"};
 	$code = $json_data->{"code"};
@@ -6,7 +12,7 @@
 	$lon = $json_data->{"lon"};
 
 	// Create connection
-	$conn = new mysqli('localhost','dzrcctk_maks','Iskra66!','dzrcctk_db');
+	$conn = new mysqli($servername, $username, $password, $dbname);
 	// Check connection
 	if ($conn->connect_error) {
 		die("Connection failed: " . $conn->connect_error);
