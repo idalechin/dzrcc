@@ -1,10 +1,15 @@
 <?php
 
-if (isset($_GET["id"]) && preg_match("/^\d+$/", $_GET["id"])){
-	$id = $_GET["id"];
-
+	$json_data = json_decode(file_get_contents('php://input'));
+	$id = $json_data->{"id"};
+	
+	$servername = "localhost";
+	$username = "dzrcctk_maks";
+	$password = "Iskra66!";
+	$dbname = "dzrcctk_db";
+	
 	// Create connection
-	$conn = new mysqli('localhost','dzrcctk_maks','Iskra66!','dzrcctk_db');
+	$conn = new mysqli($servername, $username, $password, $dbname);
 	// Check connection
 	if ($conn->connect_error) {
 		die("Connection failed: " . $conn->connect_error);
@@ -18,7 +23,5 @@ if (isset($_GET["id"]) && preg_match("/^\d+$/", $_GET["id"])){
 	}
 
 	$conn->close();
-}else {
-	echo "Parameter is incorrect";
-}
+
 

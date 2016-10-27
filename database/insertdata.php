@@ -1,15 +1,21 @@
 <?php
 
+
 	$servername = "localhost";
 	$username = "dzrcctk_maks";
 	$password = "Iskra66!";
 	$dbname = "dzrcctk_db";
 
 	$json_data = json_decode(file_get_contents('php://input'));
+
 	$id = $json_data->{"id"};
 	$code = $json_data->{"code"};
 	$lat = $json_data->{"lat"};
 	$lon = $json_data->{"lon"};
+	//$fh = fopen("errors.txt", "w");
+    //fwrite($fh, " " . $id . " " . $code . " " . $lat . " " . $lon);
+    //fwrite($fh, mb_detect_encoding("кек"));
+    //fclose($fh);
 
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
