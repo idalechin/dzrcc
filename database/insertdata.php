@@ -12,6 +12,7 @@
 	$code = $json_data->{"code"};
 	$lat = $json_data->{"lat"};
 	$lon = $json_data->{"lon"};
+	$data = $json_data->{"data"};
 	//$fh = fopen("errors.txt", "w");
     //fwrite($fh, " " . $id . " " . $code . " " . $lat . " " . $lon);
     //fwrite($fh, mb_detect_encoding("кек"));
@@ -25,10 +26,10 @@
 	} 
 	$sql = "";
 	if($id == null){
-		$sql = "INSERT INTO markers (code, lat, lng)
-		VALUES ($code, '" . $lat . "', $lon);";
+		$sql = "INSERT INTO markers (code, lat, lng, data)
+		VALUES ( '" . $code . "', '" . $lat . "', '" . $lon . "', '" . $data . "');";
 	} else {
-		$sql = "UPDATE markers SET code = $code, lat = $lat, lng = $lon WHERE id = $id;";
+		$sql = "UPDATE markers SET code = '" . $code . "', lat = '" . $lat . "', '" . $lon . "', data = '" . $data . "' WHERE id = '" . $id . "';";
 	}
 	if ($conn->multi_query($sql) === TRUE) {
 		echo "New records created successfully";
@@ -41,5 +42,3 @@
 	}
 
 	$conn->close();
-
-
