@@ -6,7 +6,8 @@ $(function() {
 	admin();
 	clickCenter();
 	clickCloseModal();
-	carToCenter();
+	mobileButtonAction();
+	clickOutMobilePanel();
 });
 
 // Количество команд:
@@ -143,10 +144,34 @@ function clickCloseModal() {
 	});
 }
 
-function carToCenter() {
-	$(document).on('click', '.team', function (e) {
-         var $id = $(this).attr('data-car-id');
-		 gmap.panTo(teamMarkers[$id].position);
+function mobileButtonAction() {
+	$(document).on('click', '.btn--mobile', function (e) {
+		$('.panel--mobile').removeClass('mobile-show');
+		var activElement = $(this).attr('data-mobile');
+		$(activElement).addClass('mobile-show');
+	});
+
+	$(document).on('click', '.panel--mobile li', function (e) {
+		$('.panel--mobile').removeClass('mobile-show');
+	});
+
+	$(document).on('mousedown', '.btn--mobile', function (e) {
+        $(this).addClass('btn--down')
+	});
+	$(document).on('mouseup', '.btn--mobile', function (e) {
+		$(this).removeClass('btn--down')
+	});
+	$(document).on('click', '.btn__icon--close', function (e) {
+		$(this).closest('.panel--mobile').removeClass('mobile-show');
+	});
+}
+
+function clickOutMobilePanel() {
+	$(document).on('mousedown', function (e){
+		var panel = $(".panel--mobile");
+		if (!panel.is(e.target) && panel.has(e.target).length === 0) {
+			panel.removeClass('mobile-show');
+		}
 	});
 }
 
@@ -169,8 +194,11 @@ function addToArray(pos){
 }
 
 function mainInit() {
-  var $mainHeight = $(window).height() - $('header').height() - 50;
-  $('main').height($mainHeight);
+  var $mainHeight = $(window).height() - $('header').height();
+  if($(window).width() < 1024)
+    $('main').height($mainHeight - 30);
+  else
+  	$('main').height($mainHeight - 40);
 }
 
 function itemAddHover(id) {
@@ -285,6 +313,8 @@ function createGMap() {
           zoom: 13,
           center: latlng,
           mapTypeControl: false,
+		  zoomControl: false,
+		  streetViewControl: false,
           disableDoubleClickZoom: true,
           navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
           mapTypeId: google.maps.MapTypeId.ROADMAP
