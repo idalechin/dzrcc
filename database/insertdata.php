@@ -26,14 +26,18 @@
 	$sql = "";
 	if($id == null){
 		$sql = "INSERT INTO markers (code, lat, lng)
-		VALUES ($code, $lat, $lon);";
+		VALUES ($code, '" . $lat . "', $lon);";
 	} else {
 		$sql = "UPDATE markers SET code = $code, lat = $lat, lng = $lon WHERE id = $id;";
 	}
 	if ($conn->multi_query($sql) === TRUE) {
 		echo "New records created successfully";
 	} else {
-		echo "Error: " . $sql . "<br>" . $conn->error;
+		$fh = fopen("errors.txt", "w");
+       fwrite("Error: " . $sql . "<br>" . $conn->error);
+		//fwrite($fh, mb_detect_encoding("кек"));
+		fclose($fh);
+	//echo "Error: " . $sql . "<br>" . $conn->error;
 	}
 
 	$conn->close();
