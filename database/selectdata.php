@@ -4,11 +4,13 @@
 		public $code;
 		public $lat;
 		public $lon;
-		public function __construct($id, $code, $lat, $lon) {
+		public $data;
+		public function __construct($id, $code, $lat, $lon, $data) {
 		  $this->id = $id;
 		  $this->code = $code;
 		  $this->lat = $lat;
 		  $this->lon = $lon;
+		  $this->data = $data;
 		}
 	} 
 
@@ -27,11 +29,11 @@
 	$sql = "SELECT id, code, lat, lng FROM markers";
 	if (isset($_GET["id"])){
 		$id = $_GET["id"];
-		$sql = "SELECT id, code, lat, lng FROM markers WHERE id = $id";
+		$sql = "SELECT id, code, lat, lng, data FROM markers WHERE id = $id";
 	}
 	if (isset($_GET["code"])){
 		$code = $_GET["code"];
-		$sql = "SELECT id, code, lat, lng FROM markers WHERE code = $code";
+		$sql = "SELECT id, code, lat, lng, data FROM markers WHERE code = $code";
 	}
 	
 	$result = $conn->query($sql);
@@ -41,7 +43,7 @@
 	if ($result->num_rows > 0) {
 		// output data of each row
 		while($row = $result->fetch_assoc()) {
-			$marker = new Marker($row["id"],$row["code"],$row["lat"],$row["lng"]);
+			$marker = new Marker($row["id"],$row["code"],$row["lat"],$row["lng"],$row["data"]);
 			$markers[] = $marker;
 		} 	
 	} else {

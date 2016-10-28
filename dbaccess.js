@@ -2,7 +2,8 @@ function test(){
 	var code = document.getElementById('code').value;
 	var lat = document.getElementById('lat').value;
 	var lon = document.getElementById('lon').value;
-	insertMarker(code,lat,lon);
+	var data = document.getElementById('data').value;
+	insertMarker(code,lat,lon,data);
 }
 
 function deletem(){
@@ -11,13 +12,26 @@ function deletem(){
 }
 
 //Добавление маркера в базу.
-function insertMarker(code, lat, lon){
-	updateMarker(null, code, lat, lon);
+function insertMarker(code, lat, lon, data){
+	updateMarker(null, code, lat, lon, data);
 }
 
 //Добавление или обновление (если id == null) маркера в базе.
-function updateMarker(id, code, lat, lon){
-	var marker = new Marker(id, code, lat, lon);
+function updateMarker(id, code, lat, lon, data){
+	var marker = new Marker(id, code, lat, lon, data);
+	var jsonObj = JSON.stringify(marker);
+	console.log(jsonObj);
+	$.ajax({
+    type: 'POST',
+    url: 'database/insertdata.php',
+    data: jsonObj,
+    dataType: 'json'
+	})
+}
+
+//Обновление позиции (lat, lon) по значению code
+function updatePosition(code, lat, lon){
+	var marker = new Marker(null, code, lat, lon, null);
 	var jsonObj = JSON.stringify(marker);
 	console.log(jsonObj);
 	$.ajax({
@@ -64,9 +78,10 @@ function deleteMarker(id){
 	})
 }
 
-function Marker(id, code, lat, lon) {
+function Marker(id, code, lat, lon, data) {
 	this.id = id;
     this.code = code;
     this.lat = lat;
     this.lon = lon;
+	this.data = data;
 }
