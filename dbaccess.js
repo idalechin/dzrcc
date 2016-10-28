@@ -11,6 +11,17 @@ function deletem(){
 	deleteMarker(id);
 }
 
+
+//-----------MARKERS-----------
+
+function Marker(id, code, lat, lon, data) {
+	this.id = id;
+    this.code = code;
+    this.lat = lat;
+    this.lon = lon;
+	this.data = data;
+}
+
 //Добавление маркера в базу.
 function insertMarker(code, lat, lon, data){
 	updateMarker(null, code, lat, lon, data);
@@ -78,10 +89,71 @@ function deleteMarker(id){
 	})
 }
 
-function Marker(id, code, lat, lon, data) {
+
+//-----------CARS-----------
+
+function Car(id, name, status) {
 	this.id = id;
-    this.code = code;
+    this.name = name;
+    this.status = status;
+}
+
+function CarPosition(carId, lat, lon, time) {
+	this.carId = carId;
     this.lat = lat;
     this.lon = lon;
-	this.data = data;
+	this.time = time;
 }
+
+//Добавление или обновление информации об экипажах
+function insertOrUpdateCar(id, name, status){
+	var car = new Car(id, name, status);
+	var jsonObj = JSON.stringify(car);
+	console.log(jsonObj);
+	$.ajax({
+    type: 'POST',
+    url: 'database/cars/insupdcar.php',
+    data: jsonObj,
+    dataType: 'json'
+	})
+}
+
+//Возвращает массив всех экипажей. Структура такая же как у Car
+function getCars(){
+	$.getJSON('database/cars/selectcars.php', function (data) {
+		return data;
+	});
+}
+
+//Возвращает информацию об экипаже по id. Структура такая же как у Car
+function getCarById(id){
+	$.getJSON('database/cars/selectcars.php?id='+id, function (data) {
+		return data;
+	});
+}
+
+//Возвращает позицию экипажа по id. Структура такая же как у CarPosition
+function getCarPosition(id){
+	$.getJSON('database/cars/selectposition.php?id='+id, function (data) {
+		return data;
+	});
+}
+
+//Возвращает массив последних позиций для каждого экипажа. Структура такая же как у CarPosition
+function getLastCarPositions(id){
+	$.getJSON('database/cars/selectposition.php', function (data) {
+		return data;
+	});
+}
+
+//Очищает БД с точками
+function resetPositions(){
+	$.ajax({
+		type: 'POST',
+		url: 'database/cars/resetpositions.php',
+		success: function(data) {
+			alert("Данные о позициях экипажей удалены.");	
+		}
+	});
+}
+
