@@ -22,7 +22,7 @@ main{
     height: 100%;
 }
 
-#point-list__wrapper{
+.point-list__wrapper{
     width: 20%;
     height: 100%;
     background: rgba(255,255,255,0.1);
@@ -298,8 +298,8 @@ main{
     bottom: 30px;
     z-index: 7;
     border-radius: 100px;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
     background: #fff;
     border: none;
@@ -314,18 +314,11 @@ main{
     right: 30px;
 }
 
-.btn__icon--close{
-    display: none !important;
-    position: absolute;
-    top: 6px;
-    right: 10px;
-    color: rgba(0, 0, 0, .78);
-}
-
 @media (max-width: 1024px) {
     body{
         max-width: 100%;
         overflow: hidden;
+        margin: 5px 0 0;
     }
     main{
         margin: 10px 0 0;
@@ -335,6 +328,9 @@ main{
         text-align: right;
         position: static;
         margin-right: 10px;
+    }
+    .point-list__title{
+        font-size: 22px;
     }
     #text2{
         display: none;
@@ -346,46 +342,29 @@ main{
     #googlemap{
         width: 100%;
     }
-    #teams__wrapper{
-        position: absolute;
-        top: 0;
-        left: -280px;
-        bottom: 0;
-        width: 280px;
-        background: #fff;
-        box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
-        z-index: 10;
-        transition: all ease 100ms;
-        padding: 5px 0 5px 10px;
+    .teams__wrapper{
+        left: 0;
     }
     .teams__label{
         border-bottom: 2px solid rgba(0,0,0, 0.4);
         padding: 0 5px 3px;
         margin-right: 12px;
+        font-size: 22px;
     }
     .team{
         display: block;
         border-radius: 0;
         border: none;
         box-shadow: none;
-        padding: 2px 0;
+        padding: 4px 0;
         width: 100%;
     }
     .team:hover{
         box-shadow: none;
         background: transparent;
     }
-    #point-list__wrapper{
-        position: absolute;
-        top: 0;
-        right: -280px;
-        bottom: 0;
-        width: 280px;
-        background: #fff;
-        box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
-        z-index: 10;
-        transition: all ease 100ms;
-        padding-top: 10px;
+    .point-list__wrapper{
+        right: 0;
     }
     .point-list__item:hover{
         box-shadow: none;
@@ -398,27 +377,41 @@ main{
         display: block;
         color: rgba(0,0,0,0.78);
         text-align: center;
+        padding: 0 !important;
     }
     .btn__icon--mobile{
-        margin: 0 auto;
+        outline: none !important;
+        text-align: center;
+        display: inline-block;
         height: 100%;
-        line-height: 37px !important;
+        line-height: 60px !important;
+        font-size: 30px !important;
     }
-    .point-list__wrapper.mobile-show{
-        right: 0 !important;
+    .panel--mobile{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 0;
+        background: #fff;
+        box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
+        z-index: 10;
+        transition: all ease 300ms;
+        padding: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
-    .teams__wrapper.mobile-show{
-        left: 0 !important;
+    .panel--mobile ul,.panel--mobile h4 {
+        display: none;
     }
     .mobile-show{
-        box-shadow: 0 100px 1000px rgba(0, 0, 0, .9), 0 100px 1000px rgba(0, 0, 0, .9) !important;
+        padding: 10px;
+        width: 280px;
+        box-shadow: 0 10px 50px rgba(0, 0, 0, .9), 0 10px 50px rgba(0, 0, 0, .9) !important;
     }
     .btn--down{
         color: #cc2226;
         box-shadow: 0 0 4px rgba(0, 0, 0, .44), 0 4px 8px rgba(0, 0, 0, .58);
-    }
-    .btn__icon--close{
-        display: block !important;
     }
 }
 @media (max-width: 480px){

@@ -148,11 +148,11 @@ function mobileButtonAction() {
 	$(document).on('click', '.btn--mobile', function (e) {
 		$('.panel--mobile').removeClass('mobile-show');
 		var activElement = $(this).attr('data-mobile');
-		$(activElement).addClass('mobile-show');
+        sidePanelMobileShow(activElement);
 	});
 
 	$(document).on('click', '.panel--mobile li', function (e) {
-		$('.panel--mobile').removeClass('mobile-show');
+        sidePanelMobileHide('.panel--mobile');
 	});
 
 	$(document).on('mousedown', '.btn--mobile', function (e) {
@@ -161,21 +161,27 @@ function mobileButtonAction() {
 	$(document).on('mouseup', '.btn--mobile', function (e) {
 		$(this).removeClass('btn--down')
 	});
-	$(document).on('click', '.btn__icon--close', function (e) {
-		$(this).closest('.panel--mobile').removeClass('mobile-show');
-	});
 }
 
 function clickOutMobilePanel() {
 	$(document).on('mousedown', function (e){
 		var panel = $(".panel--mobile");
-		if (!panel.is(e.target) && panel.has(e.target).length === 0) {
-			panel.removeClass('mobile-show');
+        var panelList = panel.find('ul');
+		if (!panelList.is(e.target) && panelList.has(e.target).length === 0) {
+            sidePanelMobileHide(panel);
 		}
 	});
 }
 
 //-----Вспомогательные функции-----------//
+
+function sidePanelMobileShow(el) {
+    $(el).addClass('mobile-show').find('ul, h4').fadeIn(400);
+}
+
+function sidePanelMobileHide(el) {
+    $(el).removeClass('mobile-show').find('ul, h4').fadeOut(50);
+}
 
 function addToArray(pos){
 	var marker = new google.maps.Marker({
@@ -196,7 +202,7 @@ function addToArray(pos){
 function mainInit() {
   var $mainHeight = $(window).height() - $('header').height();
   if($(window).width() < 1024)
-    $('main').height($mainHeight - 30);
+    $('main').height($mainHeight - 15);
   else
   	$('main').height($mainHeight - 40);
 }
@@ -305,7 +311,7 @@ function markersRefresh() {
 function createGMap() {
 	//todo: поправить и перенести в метож init
 	for (var m = 0; m < teamCount; ++m) {
-		$('.teams').append('<li class="team" data-car-id=\"' + m + '\" ><img src=\"img/car_'+m+'.svg\" class="team_image"> '+getTeamsInfo(m) + '   <span class=\"team_data\">…</span></li>');
+		$('.teams').append('<li class="team"><img src=\"img/car_'+m+'.svg\" class="team_image"> '+getTeamsInfo(m) + '   <span class=\"team_data\">…</span></li>');
 	}
 	//----
     var latlng = {lat: 51.661538, lng: 39.200271},
@@ -455,7 +461,7 @@ function doRefresh(teamId) {
 			}
 		}
 	
-	};
+	}
 	
 	var path = "position/team"+teamId+".php?"+ Math.random();
 	xhr.open("GET", path,  true);
