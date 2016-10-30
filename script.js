@@ -6,6 +6,8 @@ $(function() {
 	admin();
 	clickCenter();
 	clickCloseModal();
+	mobileButtonAction();
+	clickOutMobilePanel();
 });
 
 // Количество команд:
@@ -142,7 +144,44 @@ function clickCloseModal() {
 	});
 }
 
+function mobileButtonAction() {
+	$(document).on('click', '.btn--mobile', function (e) {
+		$('.panel--mobile').removeClass('mobile-show');
+		var activElement = $(this).attr('data-mobile');
+        sidePanelMobileShow(activElement);
+	});
+
+	$(document).on('click', '.panel--mobile li', function (e) {
+        sidePanelMobileHide('.panel--mobile');
+	});
+
+	$(document).on('mousedown', '.btn--mobile', function (e) {
+        $(this).addClass('btn--down')
+	});
+	$(document).on('mouseup', '.btn--mobile', function (e) {
+		$(this).removeClass('btn--down')
+	});
+}
+
+function clickOutMobilePanel() {
+	$(document).on('mousedown', function (e){
+		var panel = $(".panel--mobile");
+        var panelList = panel.find('ul');
+		if (!panelList.is(e.target) && panelList.has(e.target).length === 0) {
+            sidePanelMobileHide(panel);
+		}
+	});
+}
+
 //-----Вспомогательные функции-----------//
+
+function sidePanelMobileShow(el) {
+    $(el).addClass('mobile-show').find('ul, h4').fadeIn(400);
+}
+
+function sidePanelMobileHide(el) {
+    $(el).removeClass('mobile-show').find('ul, h4').fadeOut(50);
+}
 
 function addToArray(pos){
 	var marker = new google.maps.Marker({
@@ -161,8 +200,11 @@ function addToArray(pos){
 }
 
 function mainInit() {
-  var $mainHeight = $(window).height() - $('header').height() - 50;
-  $('main').height($mainHeight);
+  var $mainHeight = $(window).height() - $('header').height();
+  if($(window).width() < 1024)
+    $('main').height($mainHeight - 15);
+  else
+  	$('main').height($mainHeight - 40);
 }
 
 function itemAddHover(id) {
@@ -277,6 +319,8 @@ function createGMap() {
           zoom: 13,
           center: latlng,
           mapTypeControl: false,
+		  zoomControl: false,
+		  streetViewControl: false,
           disableDoubleClickZoom: true,
           navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
           mapTypeId: google.maps.MapTypeId.ROADMAP
