@@ -3,7 +3,9 @@ function test(){
 	var lat = document.getElementById('lat').value;
 	var lon = document.getElementById('lon').value;
 	var data = document.getElementById('data').value;
-	insertMarker(code,lat,lon,data);
+	//insertMarker(code,lat,lon,data);
+	var dt = getLastCarPositions();
+	console.log(dt[0].lat);
 }
 
 function deletem(){
@@ -140,10 +142,17 @@ function getCarPosition(id){
 }
 
 //Возвращает массив последних позиций для каждого экипажа. Структура такая же как у CarPosition
-function getLastCarPositions(id){
+function getLastCarPositions(){
+	var arr = [];
 	$.getJSON('database/cars/selectposition.php', function (data) {
-		return data;
+		 $.each(data, function (i, item) {
+			 console.log(item);
+             arr.push(new CarPosition(item.id,item.lat, item.lon, item.time));
+         });
+
 	});
+	console.log(arr[1]);
+	return arr;
 }
 
 //Очищает БД с точками

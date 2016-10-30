@@ -24,10 +24,10 @@
 		die("Connection failed: " . $conn->connect_error);
 	} 
 
-	$sql = "SELECT id, lat, lng, max(time) FROM markers group by id";
+	$sql = "SELECT carId, lat, lng, max(time) FROM positions group by carId";
 	if (isset($_GET["id"])){
 		$carId = $_GET["id"];
-		$sql = "SELECT id, lat, lng, max(time) FROM markers WHERE id = $carId";
+		$sql = "SELECT id, lat, lng, max(time) FROM positions WHERE id = $carId";
 	}
 	
 	$result = $conn->query($sql);
