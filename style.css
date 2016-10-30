@@ -265,13 +265,14 @@ main{
     padding: 0 10px;
    }
 
-.modal__btn{
+.modal__btn-wrapper{
+    display: flex;
+    width: 160px;
+    justify-content: space-between;
     margin: 20px auto;
-    display: block;
-    box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
-    width: 80px;
-    background: #3779C7;
-    color: white;
+}
+
+.modal__btn{
     outline: none;
     border: none;
     font-size: 22px;
@@ -282,14 +283,33 @@ main{
     cursor: pointer;
     text-transform: uppercase;
 }
-.modal__btn:hover {
+
+.modal__btn--ok{
+    display: block;
+    box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
+    width: 80px;
+    background: #3779C7;
+    color: white;
+}
+
+.modal__btn--ok:hover {
     box-shadow: 0 0 4px rgba(0, 0, 0, .44), 0 4px 8px rgba(0, 0, 0, .58);
 }
 
+.modal__btn--no{
+    color: #3779C7;
+    border: 3px solid transparent;
+    background: transparent;
+    line-height: 28px;
+}
+
+.modal__btn--no:hover {
+    border: 3px solid #3779C7;
+}
 .team_data{
     margin-left: 3px;
     color: rgba(0, 0, 0, .48);
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .btn--mobile{
@@ -401,8 +421,9 @@ main{
         overflow-x: hidden;
         overflow-y: auto;
     }
-    .panel--mobile ul,.panel--mobile h4 {
-        display: none;
+    .panel--mobile ul, .panel--mobile h4{
+        min-width: 260px;
+        width: 260px;
     }
     .mobile-show{
         padding: 10px;
