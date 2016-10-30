@@ -152,6 +152,16 @@ function clickCloseModal() {
 			markersRefresh();
 		}
 	});
+    $(document).on('mousedown', function (e){
+        var panel = $(".modal");
+        if (!panel.is(e.target) && panel.has(e.target).length === 0 && $(".modal:visible").length) {
+            var lastMarkerId = markers[markers.length-1].id;
+            removeMarker(lastMarkerId);
+            closeModal();
+            listRefresh();
+            markersRefresh();
+        }
+    });
 }
 
 function mobileButtonAction() {

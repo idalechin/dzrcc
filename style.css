@@ -253,12 +253,13 @@ main{
     margin:auto;
     width: 300px;
     text-align: center;
+    position: relative;
 }
 
 .modal__input{
-       margin: 10px auto;
-       display: block;
-       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    margin: 10px auto;
+    display: block;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     width: 200px;
     height: 30px;
     line-height: 30px;
@@ -266,9 +267,8 @@ main{
    }
 
 .modal__btn-wrapper{
-    display: flex;
+    display: block;
     width: 160px;
-    justify-content: space-between;
     margin: 20px auto;
 }
 
@@ -282,29 +282,42 @@ main{
     line-height: 36px;
     cursor: pointer;
     text-transform: uppercase;
-}
-
-.modal__btn--ok{
-    display: block;
-    box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
-    width: 80px;
-    background: #3779C7;
-    color: white;
+    transition: all 200ms ease;
 }
 
 .modal__btn--ok:hover {
     box-shadow: 0 0 4px rgba(0, 0, 0, .44), 0 4px 8px rgba(0, 0, 0, .58);
 }
 
-.modal__btn--no{
-    color: #3779C7;
-    border: 3px solid transparent;
-    background: transparent;
-    line-height: 28px;
+.modal__btn--ok {
+    display: block;
+    width: 80px;
+    background: #3779C7;
+    color: white;
+    box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
+    margin: 0 auto;
 }
 
-.modal__btn--no:hover {
-    border: 3px solid #3779C7;
+.modal__btn--no{
+    color: rgba(0,0,0,0.78);
+    background: transparent;
+    line-height: 30px;
+    font-size:30px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.modal__btn--no i{
+    transition: all 200ms ease;
+    font-weight: 700;
+}
+
+.modal__btn--no:hover i{
+    transform: rotate(90deg);
 }
 .team_data{
     margin-left: 3px;
