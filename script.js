@@ -6,8 +6,11 @@ $(function() {
 	admin();
 	clickCenter();
 	clickCloseModal();
-	mobileButtonAction();
-	clickOutMobilePanel();
+	carToCenter();
+	if($(window).width() < 1024){
+		mobileButtonAction();
+		clickOutMobilePanel();
+	}
 });
 
 // Количество команд:
@@ -173,14 +176,21 @@ function clickOutMobilePanel() {
 	});
 }
 
+function carToCenter() {
+	$(document).on('click', '.team', function (e) {
+	   var $id = $(this).attr('data-car-id');
+	   gmap.panTo(teamMarkers[$id].position);
+	});
+}
+
 //-----Вспомогательные функции-----------//
 
 function sidePanelMobileShow(el) {
-    $(el).addClass('mobile-show').find('ul, h4').fadeIn(400);
+    $(el).addClass('mobile-show');
 }
 
 function sidePanelMobileHide(el) {
-    $(el).removeClass('mobile-show').find('ul, h4').fadeOut(50);
+    $(el).removeClass('mobile-show');
 }
 
 function addToArray(pos){
@@ -311,7 +321,7 @@ function markersRefresh() {
 function createGMap() {
 	//todo: поправить и перенести в метож init
 	for (var m = 0; m < teamCount; ++m) {
-		$('.teams').append('<li class="team"><img src=\"img/car_'+m+'.svg\" class="team_image"> '+getTeamsInfo(m) + '   <span class=\"team_data\">…</span></li>');
+		$('.teams').append('<li class="team"  data-car-id=\"' + m + '\" ><img src=\"img/car_'+m+'.svg\" class="team_image"> '+getTeamsInfo(m) + '   <span class=\"team_data\">…</span></li>');
 	}
 	//----
     var latlng = {lat: 51.661538, lng: 39.200271},
