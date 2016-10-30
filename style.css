@@ -384,6 +384,12 @@ main{
         margin-right: 12px;
         font-size: 22px;
     }
+    .teams{
+        position: absolute;
+        right: 15px;
+        top: 45px;
+        width: 260px;
+    }
     .team{
         display: block;
         border-radius: 0;
