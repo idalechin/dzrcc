@@ -289,7 +289,7 @@ main{
 .team_data{
     margin-left: 3px;
     color: rgba(0, 0, 0, .48);
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .btn--mobile{
@@ -401,8 +401,9 @@ main{
         overflow-x: hidden;
         overflow-y: auto;
     }
-    .panel--mobile ul,.panel--mobile h4 {
-        display: none;
+    .panel--mobile ul, .panel--mobile h4{
+        min-width: 260px;
+        width: 260px;
     }
     .mobile-show{
         padding: 10px;
