@@ -6,6 +6,11 @@ $(function() {
 	admin();
 	clickCenter();
 	clickCloseModal();
+	carToCenter();
+	if($(window).width() < 1024){
+		mobileButtonAction();
+		clickOutMobilePanel();
+	}
 });
 
 // Количество команд:
@@ -126,12 +131,19 @@ function clickCenter() {
 }
 
 function clickCloseModal() {
-	$(document).on('click', '.modal__btn', function (e) {
-		markers[markers.length-1].title = $('.modal__input').val();
-		closeModal();
-		listRefresh();
-		markersRefresh();
-	});
+	$(document).on('click', '.modal__btn--ok', function (e) {
+        markers[markers.length-1].title = $('.modal__input').val();
+        closeModal();
+        listRefresh();
+        markersRefresh();
+    });
+    $(document).on('click', '.modal__btn--no', function (e) {
+        var lastMarkerId = markers[markers.length-1].id;
+        removeMarker(lastMarkerId);
+        closeModal();
+        listRefresh();
+        markersRefresh();
+    });
 	$(document).on('keypress', '.modal', function (e) {
 		if (e.which == 13) {
 			markers[markers.length-1].title = $('.modal__input').val();
@@ -140,9 +152,63 @@ function clickCloseModal() {
 			markersRefresh();
 		}
 	});
+    $(document).on('mousedown', function (e){
+        var panel = $(".modal");
+        if (!panel.is(e.target) && panel.has(e.target).length === 0 && $(".modal:visible").length) {
+            var lastMarkerId = markers[markers.length-1].id;
+            removeMarker(lastMarkerId);
+            closeModal();
+            listRefresh();
+            markersRefresh();
+        }
+    });
+}
+
+function mobileButtonAction() {
+	$(document).on('click', '.btn--mobile', function (e) {
+		$('.panel--mobile').removeClass('mobile-show');
+		var activElement = $(this).attr('data-mobile');
+        sidePanelMobileShow(activElement);
+	});
+
+	$(document).on('click', '.panel--mobile li', function (e) {
+        sidePanelMobileHide('.panel--mobile');
+	});
+
+	$(document).on('mousedown', '.btn--mobile', function (e) {
+        $(this).addClass('btn--down')
+	});
+	$(document).on('mouseup', '.btn--mobile', function (e) {
+		$(this).removeClass('btn--down')
+	});
+}
+
+function clickOutMobilePanel() {
+	$(document).on('mousedown', function (e){
+		var panel = $(".panel--mobile");
+        var panelList = panel.find('ul');
+		if (!panelList.is(e.target) && panelList.has(e.target).length === 0) {
+            sidePanelMobileHide(panel);
+		}
+	});
+}
+
+function carToCenter() {
+	$(document).on('click', '.team', function (e) {
+	   var $id = $(this).attr('data-car-id');
+	   gmap.panTo(teamMarkers[$id].position);
+	});
 }
 
 //-----Вспомогательные функции-----------//
+
+function sidePanelMobileShow(el) {
+    $(el).addClass('mobile-show');
+}
+
+function sidePanelMobileHide(el) {
+    $(el).removeClass('mobile-show');
+}
 
 function addToArray(pos){
 	var marker = new google.maps.Marker({
@@ -161,8 +227,11 @@ function addToArray(pos){
 }
 
 function mainInit() {
-  var $mainHeight = $(window).height() - $('header').height() - 50;
-  $('main').height($mainHeight);
+  var $mainHeight = $(window).height() - $('header').height();
+  if($(window).width() < 1024)
+    $('main').height($mainHeight - 15);
+  else
+  	$('main').height($mainHeight - 40);
 }
 
 function itemAddHover(id) {
@@ -269,7 +338,7 @@ function markersRefresh() {
 function createGMap() {
 	//todo: поправить и перенести в метож init
 	for (var m = 0; m < teamCount; ++m) {
-		$('.teams').append('<li class="team"><img src=\"img/car_'+m+'.svg\" class="team_image"> '+getTeamsInfo(m) + '   <span class=\"team_data\">…</span></li>');
+		$('.teams').append('<li class="team"  data-car-id=\"' + m + '\" ><img src=\"img/car_'+m+'.svg\" class="team_image"> '+getTeamsInfo(m) + '   <span class=\"team_data\">…</span></li>');
 	}
 	//----
     var latlng = {lat: 51.661538, lng: 39.200271},
@@ -277,6 +346,8 @@ function createGMap() {
           zoom: 13,
           center: latlng,
           mapTypeControl: false,
+		  zoomControl: false,
+		  streetViewControl: false,
           disableDoubleClickZoom: true,
           navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
           mapTypeId: google.maps.MapTypeId.ROADMAP
