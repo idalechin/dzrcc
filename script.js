@@ -131,12 +131,19 @@ function clickCenter() {
 }
 
 function clickCloseModal() {
-	$(document).on('click', '.modal__btn', function (e) {
-		markers[markers.length-1].title = $('.modal__input').val();
-		closeModal();
-		listRefresh();
-		markersRefresh();
-	});
+	$(document).on('click', '.modal__btn--ok', function (e) {
+        markers[markers.length-1].title = $('.modal__input').val();
+        closeModal();
+        listRefresh();
+        markersRefresh();
+    });
+    $(document).on('click', '.modal__btn--no', function (e) {
+        var lastMarkerId = markers[markers.length-1].id;
+        removeMarker(lastMarkerId);
+        closeModal();
+        listRefresh();
+        markersRefresh();
+    });
 	$(document).on('keypress', '.modal', function (e) {
 		if (e.which == 13) {
 			markers[markers.length-1].title = $('.modal__input').val();
