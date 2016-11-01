@@ -1,17 +1,32 @@
+$(function () {
+	addMarkersList();
+});
+
+var markers = [];
+
+function addMarkersList() {
+	$(document).on('click', function () {
+		$.getJSON("database/selectdata.php")
+			.success(function(data) {
+				$.each(data, function(key, val){
+					$('.markers').append('<li>' + val.id + '</li>');
+				});
+			});
+	})
+}
+
 function test(){
 	var code = document.getElementById('code').value;
 	var lat = document.getElementById('lat').value;
 	var lon = document.getElementById('lon').value;
 	var data = document.getElementById('data').value;
 	insertMarker(code,lat,lon,data);
-
 }
 
 function deletem(){
 	var id = document.getElementById('id').value;
 	deleteMarker(id);
 }
-
 
 //-----------MARKERS-----------
 
@@ -57,9 +72,12 @@ function updatePosition(code, lat, lon){
 //Берет маркеры из БД.
 //Возвращает массив маркеров со структурой как у объекта Marker.
 function getMarkers(){
-	$.getJSON('database/selectdata.php', function (data) {
-		return data;
-	});
+	$.getJSON("database/selectdata.php")
+		.success(function(data) {
+			$.each(data, function(key, val){
+				markers.push(val);
+			});
+		});
 }
 
 //Берет маркер по id.
