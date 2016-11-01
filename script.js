@@ -1,4 +1,5 @@
 $(function() {
+	getMarkersFromServer();
     multiRefresh();
     removeItem();
     hoverDelete();
@@ -71,6 +72,17 @@ function getTeamsInfo(id){
 }
 
 //-----Отслеживание событий DOM-----------//
+
+function getMarkersFromServer() {
+	$.getJSON("database/selectdata.php")
+		.success(function(data) {
+			$.each(data, function(key, val){
+				markers.push(val);
+			});
+			listRefresh();
+			markersRefresh();
+		});
+}
 
 function removeItem(){
 	$(document).on('click', '[data-toggle="delete-item"]', function () {
