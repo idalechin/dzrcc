@@ -1,3 +1,10 @@
+$(function () {
+	getMarkers(markers);
+	console.log(markers);
+});
+
+var markers = [];
+
 function test(){
 	var code = document.getElementById('code').value;
 	var lat = document.getElementById('lat').value;
@@ -56,9 +63,11 @@ function updatePosition(code, lat, lon){
 
 //Берет маркеры из БД.
 //Возвращает массив маркеров со структурой как у объекта Marker.
-function getMarkers(){
+function getMarkers(arr){
 	$.getJSON('database/selectdata.php', function (data) {
-		return data;
+		$.each(data, function(key, val){
+			arr.push(val);
+		});
 	});
 }
 
