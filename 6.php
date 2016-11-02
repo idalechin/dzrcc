@@ -1,26 +1,37 @@
 <?php
-
-// THIS IS ONLY A SAMPLE SCRIPT. PLEASE TWEAK IT TO YOUR NEEDS.
-// IT COMES WITH NO WARRANTY WHATSOEVER. 
-
-$file = "position/data/gps-position-team6.txt"; // you might save in a database instead...
-
+$team = basename(__FILE__, '.php');
 if (isset($_GET["lat"]) && preg_match("/^-?\d+\.\d+$/", $_GET["lat"])
     && isset($_GET["lon"]) && preg_match("/^-?\d+\.\d+$/", $_GET["lon"]) ) {
-    $fh = fopen($file, "w");
-    if (!$fh) {
-        header("HTTP/1.0 500 Internal Server Error");
-        exit(print_r(error_get_last(), true));
-    }
-    fwrite($fh, date("Y-m-d H:i:s")."_".$_GET["lat"]."_".$_GET["lon"]."_");
-    if (isset($_GET["t"]) && preg_match("/^\d+$/", $_GET["t"])) {
-        fwrite($fh, $_GET["t"]);
-    }
-    fclose($fh);
-    // you should obviously do your own checks before this...
-    echo "OK";
+    
+    $servername = "localhost";
+	$username = "dzrcctk_maks";
+	$password = "Iskra66!";
+	$dbname = "dzrcctk_db";
+	
+	// Create connection
+	$conn = new mysqli($servername, $username, $password, $dbname);
+	// Check connection
+	if ($conn->connect_error) {
+		die("Connection failed: " . $conn->connect_error);
+	} 
+	$lat = $_GET['lat'];
+	$lon = $_GET['lon'];
+	$dte = 0;
+	if (isset($_GET["t"]) && preg_match("/^\d+$/", $_GET["t"])) {
+        $dte = $_GET["t"];
+    } else {
+		$dte = round(microtime(true) * 1000);
+	}
+	$sql = "INSERT INTO positions (carId, lat, lng, time)
+	VALUES ('".$team."', '".$lat."', '".$lon."','".$dte."');";
+	
+    if ($conn->multi_query($sql) === TRUE) {
+		echo "New records created successfully";
+	} else {
+	    echo "Error: " . $sql . "<br>" . $conn->error;
+	}
+	$conn->close();
 } elseif (isset($_GET["tracker"])) {
-    // do whatever you want here...
     echo "OK";
 } else {
     header('HTTP/1.0 400 Bad Request');

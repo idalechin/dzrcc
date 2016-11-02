@@ -6,8 +6,11 @@ $(function() {
 	admin();
 	clickCenter();
 	clickCloseModal();
-	mobileButtonAction();
-	clickOutMobilePanel();
+	carToCenter();
+	if($(window).width() < 1024){
+		mobileButtonAction();
+		clickOutMobilePanel();
+	}
 });
 
 // Количество команд:
@@ -128,20 +131,33 @@ function clickCenter() {
 }
 
 function clickCloseModal() {
-	$(document).on('click', '.modal__btn', function (e) {
-		markers[markers.length-1].title = $('.modal__input').val();
-		closeModal();
-		listRefresh();
-		markersRefresh();
-	});
+	$(document).on('click', '.modal__btn--ok', function (e) {
+		var code = $('.modal__input').val();
+		closeModal(code);
+        listRefresh();
+        markersRefresh();
+    });
+    $(document).on('click', '.modal__btn--no', function (e) {
+        closeModal(null);
+        listRefresh();
+        markersRefresh();
+    });
 	$(document).on('keypress', '.modal', function (e) {
 		if (e.which == 13) {
-			markers[markers.length-1].title = $('.modal__input').val();
-			closeModal();
+			var code = $('.modal__input').val();
+			closeModal(code);
 			listRefresh();
 			markersRefresh();
 		}
 	});
+    $(document).on('mousedown', function (e){
+        var panel = $(".modal");
+        if (!panel.is(e.target) && panel.has(e.target).length === 0 && $(".modal:visible").length) {
+            closeModal(null);
+            listRefresh();
+            markersRefresh();
+        }
+    });
 }
 
 function mobileButtonAction() {
@@ -173,30 +189,21 @@ function clickOutMobilePanel() {
 	});
 }
 
+function carToCenter() {
+	$(document).on('click', '.team', function (e) {
+	   var $id = $(this).attr('data-car-id');
+	   gmap.panTo(teamMarkers[$id].position);
+	});
+}
+
 //-----Вспомогательные функции-----------//
 
 function sidePanelMobileShow(el) {
-    $(el).addClass('mobile-show').find('ul, h4').fadeIn(400);
+    $(el).addClass('mobile-show');
 }
 
 function sidePanelMobileHide(el) {
-    $(el).removeClass('mobile-show').find('ul, h4').fadeOut(50);
-}
-
-function addToArray(pos){
-	var marker = new google.maps.Marker({
-		position: pos,
-		map: gmap,
-		icon: markerImage,
-		draggable: true
-	});
-	markers.push(marker);
-	if(markers.length > 1){
-		marker.id = markers[markers.length-2].id + 1 ;
-	}
-	else{
-		marker.id = 1;
-	}
+    $(el).removeClass('mobile-show');
 }
 
 function mainInit() {
@@ -224,13 +231,17 @@ function itemRemoveHover(id) {
 }
 
 function openModal(pos) {
-	addToArray(pos);
+	$('.modal').data('position', pos);
 	$('.modal__back').removeClass('hidden');
 	$('.modal__input').val('');
 	$('.modal__input').focus();
 }
 
-function closeModal() {
+function closeModal(code) {
+	var pos = $('.modal').data('position');
+	if(pos != null)
+	  insertMarker(pos, code);
+	$('.modal').data('position', null);
 	$('.modal__back').addClass('hidden')
 }
 
@@ -267,7 +278,7 @@ function removeMarker(id) {
 		}
 	);
 	markers.forEach(function(item, i, arr) {
-		if(markers[i].id == id){
+		if(item.id == id){
 			item.setMap(null);
 			markers.splice(i,1)
 		}
@@ -311,7 +322,7 @@ function markersRefresh() {
 function createGMap() {
 	//todo: поправить и перенести в метож init
 	for (var m = 0; m < teamCount; ++m) {
-		$('.teams').append('<li class="team"><img src=\"img/car_'+m+'.svg\" class="team_image"> '+getTeamsInfo(m) + '   <span class=\"team_data\">…</span></li>');
+		$('.teams').append('<li class="team"  data-car-id=\"' + m + '\" ><img src=\"img/car_'+m+'.svg\" class="team_image"> '+getTeamsInfo(m) + '   <span class=\"team_data\">…</span></li>');
 	}
 	//----
     var latlng = {lat: 51.661538, lng: 39.200271},
@@ -360,7 +371,9 @@ function createGMap() {
     });
 
     google.maps.event.addListener(gmap, "dblclick", function(e) {
-        rightClickPosition = e.latLng;
+		var rightClickPosition = [];
+        rightClickPosition[0] = e.latLng.lat();
+		rightClickPosition[1] = e.latLng.lng();
         addMarker(rightClickPosition);
     });
 }
@@ -421,8 +434,9 @@ function multiRefresh(){
 			$(this).text(teamData[indx]);
 		});
 	}
-	setTimeout(multiRefresh, 5000);
+	setTimeout(multiRefresh, 1000);
 	mainInit();
+	getMarkersFromServer();
 }
 
 
