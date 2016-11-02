@@ -132,22 +132,20 @@ function clickCenter() {
 
 function clickCloseModal() {
 	$(document).on('click', '.modal__btn--ok', function (e) {
-        markers[markers.length-1].title = $('.modal__input').val();
-        closeModal();
+		var code = $('.modal__input').val();
+		closeModal(code);
         listRefresh();
         markersRefresh();
     });
     $(document).on('click', '.modal__btn--no', function (e) {
-        var lastMarkerId = markers[markers.length-1].id;
-        removeMarker(lastMarkerId);
-        closeModal();
+        closeModal(null);
         listRefresh();
         markersRefresh();
     });
 	$(document).on('keypress', '.modal', function (e) {
 		if (e.which == 13) {
-			markers[markers.length-1].title = $('.modal__input').val();
-			closeModal();
+			var code = $('.modal__input').val();
+			closeModal(code);
 			listRefresh();
 			markersRefresh();
 		}
@@ -155,9 +153,7 @@ function clickCloseModal() {
     $(document).on('mousedown', function (e){
         var panel = $(".modal");
         if (!panel.is(e.target) && panel.has(e.target).length === 0 && $(".modal:visible").length) {
-            var lastMarkerId = markers[markers.length-1].id;
-            removeMarker(lastMarkerId);
-            closeModal();
+            closeModal(null);
             listRefresh();
             markersRefresh();
         }
@@ -235,13 +231,17 @@ function itemRemoveHover(id) {
 }
 
 function openModal(pos) {
-	updateMarker(pos);
+	$('.modal').data('position', pos);
 	$('.modal__back').removeClass('hidden');
 	$('.modal__input').val('');
 	$('.modal__input').focus();
 }
 
-function closeModal() {
+function closeModal(code) {
+	var pos = $('.modal').data('position');
+	if(pos != null)
+	  insertMarker(pos, code);
+	$('.modal').data('position', null);
 	$('.modal__back').addClass('hidden')
 }
 
@@ -371,7 +371,9 @@ function createGMap() {
     });
 
     google.maps.event.addListener(gmap, "dblclick", function(e) {
-        rightClickPosition = e.latLng;
+		var rightClickPosition = [];
+        rightClickPosition[0] = e.latLng.lat();
+		rightClickPosition[1] = e.latLng.lng();
         addMarker(rightClickPosition);
     });
 }
@@ -432,8 +434,9 @@ function multiRefresh(){
 			$(this).text(teamData[indx]);
 		});
 	}
-	setTimeout(multiRefresh, 5000);
+	setTimeout(multiRefresh, 1000);
 	mainInit();
+	getMarkersFromServer();
 }
 
 
