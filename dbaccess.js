@@ -1,24 +1,21 @@
 $(function () {
-	getMarkers(markers);
-	console.log(markers);
+	getMarkersFromServer();
 });
-
-var markers = [];
-
-function test(){
-	var code = document.getElementById('code').value;
-	var lat = document.getElementById('lat').value;
-	var lon = document.getElementById('lon').value;
-	var data = document.getElementById('data').value;
-	insertMarker(code,lat,lon,data);
-
-}
 
 function deletem(){
 	var id = document.getElementById('id').value;
 	deleteMarker(id);
 }
 
+function refreshMarkersArray(data) {
+	markers = [];
+	$.each(data, function(key, val){
+		markers.push(val);
+	});
+	listRefresh();
+	markersRefresh();
+	console.log(markers);
+}
 
 //-----------MARKERS-----------
 
@@ -36,16 +33,25 @@ function insertMarker(code, lat, lon, data){
 }
 
 //Добавление или обновление (если id == null) маркера в базе.
-function updateMarker(id, code, lat, lon, data){
-	var marker = new Marker(id, code, lat, lon, data);
+function updateMarker(pos){
+	var marker = new google.maps.Marker({
+		position: pos,
+		map: gmap,
+		icon: markerImage,
+		draggable: true
+	});
 	var jsonObj = JSON.stringify(marker);
 	console.log(jsonObj);
 	$.ajax({
-    type: 'POST',
-    url: 'database/insertdata.php',
-    data: jsonObj,
-    dataType: 'json'
+       type: 'POST',
+       url: 'database/insertdata.php',
+       data: jsonObj,
+       // dataType: 'json',
+	   success: function () {
+	   	getMarkersFromServer();
+	   }
 	})
+
 }
 
 //Обновление позиции (lat, lon) по значению code
@@ -63,12 +69,11 @@ function updatePosition(code, lat, lon){
 
 //Берет маркеры из БД.
 //Возвращает массив маркеров со структурой как у объекта Marker.
-function getMarkers(arr){
-	$.getJSON('database/selectdata.php', function (data) {
-		$.each(data, function(key, val){
-			arr.push(val);
+function getMarkersFromServer() {
+	$.getJSON("database/selectdata.php")
+		.success(function(data) {
+			refreshMarkersArray(data)
 		});
-	});
 }
 
 //Берет маркер по id.
