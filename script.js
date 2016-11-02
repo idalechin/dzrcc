@@ -1,5 +1,4 @@
 $(function() {
-	getMarkersFromServer();
     multiRefresh();
     removeItem();
     hoverDelete();
@@ -72,17 +71,6 @@ function getTeamsInfo(id){
 }
 
 //-----Отслеживание событий DOM-----------//
-
-function getMarkersFromServer() {
-	$.getJSON("database/selectdata.php")
-		.success(function(data) {
-			$.each(data, function(key, val){
-				markers.push(val);
-			});
-			listRefresh();
-			markersRefresh();
-		});
-}
 
 function removeItem(){
 	$(document).on('click', '[data-toggle="delete-item"]', function () {
@@ -222,22 +210,6 @@ function sidePanelMobileHide(el) {
     $(el).removeClass('mobile-show');
 }
 
-function addToArray(pos){
-	var marker = new google.maps.Marker({
-		position: pos,
-		map: gmap,
-		icon: markerImage,
-		draggable: true
-	});
-	markers.push(marker);
-	if(markers.length > 1){
-		marker.id = markers[markers.length-2].id + 1 ;
-	}
-	else{
-		marker.id = 1;
-	}
-}
-
 function mainInit() {
   var $mainHeight = $(window).height() - $('header').height();
   if($(window).width() < 1024)
@@ -263,7 +235,7 @@ function itemRemoveHover(id) {
 }
 
 function openModal(pos) {
-	addToArray(pos);
+	updateMarker(pos);
 	$('.modal__back').removeClass('hidden');
 	$('.modal__input').val('');
 	$('.modal__input').focus();
@@ -306,7 +278,7 @@ function removeMarker(id) {
 		}
 	);
 	markers.forEach(function(item, i, arr) {
-		if(markers[i].id == id){
+		if(item.id == id){
 			item.setMap(null);
 			markers.splice(i,1)
 		}
