@@ -297,7 +297,6 @@ function markersRefresh() {
 
 //----- Карта -----------//
 
-
 function createGMap() {
 	//todo: поправить и перенести в метож init
 	for (var m = 0; m < teamCount; ++m) {
@@ -440,7 +439,31 @@ function setMarkerListeners(marker){
 	});
 }
 
+function refreshMarkersArray2(data) {
+	var tmp = markers;
+	markers = [];
+	$.each(data, function(key, val){
+		var marker = new google.maps.Marker({
+			position: {lat: parseFloat(val.lat), lng: parseFloat(val.lon)},
+			map: gmap,
+			icon: markerImage,
+			draggable: true,
+			title: val.code
+		});
+		marker.id = val.id;
+		markers.push(marker);
+		setMarkerListeners(marker);
+	});
+	
+	tmp.forEach(function(item, i, arr) {
+		item.setMap(null);
+	});
+	tmp = [];
+	listRefresh();
+}
+
 function refreshMarkersArray(data) {
+
 	var changed = false;
 	//Процесс добавления:
 	var dbMarkersIds = [];
