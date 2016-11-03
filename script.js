@@ -19,6 +19,7 @@ var teamCount = 6;
 var gmap, marker;
 var dte, lat, lon, utc;
 var markers = [];
+var markersIds = [];
 var teamMarkers = [];
 var teamData = [];
 var teamInfo;
@@ -134,20 +135,20 @@ function clickCloseModal() {
 	$(document).on('click', '.modal__btn--ok', function (e) {
 		var code = $('.modal__input').val();
 		closeModal(code);
-        listRefresh();
-        markersRefresh();
+        //listRefresh();
+        //markersRefresh();
     });
     $(document).on('click', '.modal__btn--no', function (e) {
         closeModal(null);
-        listRefresh();
-        markersRefresh();
+        //listRefresh();
+        //markersRefresh();
     });
 	$(document).on('keypress', '.modal', function (e) {
 		if (e.which == 13) {
 			var code = $('.modal__input').val();
 			closeModal(code);
-			listRefresh();
-			markersRefresh();
+			//listRefresh();
+			//markersRefresh();
 		}
 	});
     $(document).on('mousedown', function (e){
@@ -240,32 +241,9 @@ function openModal(pos) {
 function closeModal(code) {
 	var pos = $('.modal').data('position');
 	if(pos != null)
-	  insertMarker(pos, code);
+	  addMarker(pos, code);
 	$('.modal').data('position', null);
 	$('.modal__back').addClass('hidden')
-}
-
-//-----Добавление элементов-----------//
-
-function addMarker(pos) {
-	openModal(pos);
-}
-
-function addItem(i, title) {
-	var text = title;
-	if(title == undefined){
-		text = '';
-	}
-	$('.point-list').append('<li class=\"point-list__item\" data-id=\"' + i +'\"><span class=\"point-list__text\">№' + i + ' <span class=\"point-list__name\">' + text + '</span></span><span class=\"point-list__delete\" data-toggle=\"delete-item\">&#10060;</span></li>');
-}
-
-function addInfoWindow(item) {
-	var infowindow = new google.maps.InfoWindow({
-		content: '<div>(' + item.id + ') ' + item.title + '</div>'
-	});
-	google.maps.event.addListener(item, "click", function(e) {
-		infowindow.open(gmap, item);
-	});
 }
 
 //-----Удаление элементов-----------//
@@ -280,7 +258,8 @@ function removeMarker(id) {
 	markers.forEach(function(item, i, arr) {
 		if(item.id == id){
 			item.setMap(null);
-			markers.splice(i,1)
+			deleteMarker(item.id);
+			markers.splice(i,1);
 		}
 	});
 }
@@ -351,12 +330,8 @@ function createGMap() {
 				anchor: new google.maps.Point(12, 24)
 			}
 		});
-		// console.log();
 		teamMarkers.push(gmarker);
 		latlng = {lat: 51.681538, lng: 39.200271};
-		//google.maps.event.addListener(gmarker, "click", function(e) {
-			//alert("GPS coordinates:\nLatitude: " + gmarker.getPosition().lat() + "\nLongitude: " + gmarker.getPosition().lng());
-		//});
 	}
 	
 	teamMarkers.forEach(function(mark, i, arr) {
@@ -366,16 +341,41 @@ function createGMap() {
 				content: '<div>'+getTeamsInfo(i) +':<br>'+ mark.getPosition().lat() + ', ' + mark.getPosition().lng()+'</div>'
 			});
 			teamInfo.open(gmap, mark);
-			//alert("GPS coordinates:\nLatitude: " + gmarker.getPosition().lat() + "\nLongitude: " + gmarker.getPosition().lng());
 		});
     });
 
+	// Добавление события создания маркера двойныим кликом
     google.maps.event.addListener(gmap, "dblclick", function(e) {
 		var rightClickPosition = [];
         rightClickPosition[0] = e.latLng.lat();
 		rightClickPosition[1] = e.latLng.lng();
-        addMarker(rightClickPosition);
+		openModal(rightClickPosition); //открывает окно ввода кода и передает позицию
+        //addMarker(rightClickPosition);
     });
+}
+
+//-----Добавление элементов-----------//
+
+function addMarker(pos, code) {
+	insertMarker(pos, code); //добавление маркера в БД
+	
+}
+
+function addItem(i, title) {
+	var text = title;
+	if(title == undefined){
+		text = '';
+	}
+	$('.point-list').append('<li class=\"point-list__item\" data-id=\"' + i +'\"><span class=\"point-list__text\">№' + i + ' <span class=\"point-list__name\">' + text + '</span></span><span class=\"point-list__delete\" data-toggle=\"delete-item\">&#10060;</span></li>');
+}
+
+function addInfoWindow(item) {
+	var infowindow = new google.maps.InfoWindow({
+		content: '<div>(' + item.id + ') ' + item.title + '</div>'
+	});
+	google.maps.event.addListener(item, "click", function(e) {
+		infowindow.open(gmap, item);
+	});
 }
 
 function initSearchBox(){
@@ -412,7 +412,10 @@ function initSearchBox(){
         var bounds = new google.maps.LatLngBounds();
 
 	    var pos = places[0].geometry.location;
-	    addMarker(pos);
+		var rightClickPosition = [];
+        rightClickPosition[0] = pos.lat();
+		rightClickPosition[1] = pos.lng();
+	    openModal(rightClickPosition);
 		$('#pac-input').val('');
 
 		bounds.extend(pos);
@@ -421,6 +424,58 @@ function initSearchBox(){
 	});
 }
 
+function setMarkerListeners(marker){
+	marker.setMap(gmap);
+	google.maps.event.addListener(marker, "dblclick", function(e) {
+		removeMarker(marker.id);
+		markersRefresh();
+	});
+	google.maps.event.addListener(marker, "mouseover", function(e) {
+		itemSetIcon(marker, markerImageHover, null);
+		itemAddHover(marker.id);
+	});
+	google.maps.event.addListener(marker, "mouseout", function(e) {
+		itemSetIcon(marker, markerImage, null);
+		itemRemoveHover(marker.id);
+	});
+}
+
+function refreshMarkersArray(data) {
+	var changed = false;
+	//Процесс добавления:
+	var dbMarkersIds = [];
+	$.each(data, function(key, val){
+		if(markersIds.indexOf(val.id)<0){
+			console.log('ok')
+			var marker = new google.maps.Marker({
+				position: {lat: parseFloat(val.lat), lng: parseFloat(val.lon)},
+				map: gmap,
+				icon: markerImage,
+				draggable: true,
+				title: val.code
+			});
+			marker.id = val.id;
+			markersIds.push(val.id);
+			markers.push(marker);
+			setMarkerListeners(marker);
+			changed = true;
+		}
+		dbMarkersIds.push(val.id);
+		
+	});
+	
+	//Процесс удаления:
+	markers.forEach(function(item, i, arr) {
+		if(dbMarkersIds.indexOf(item.id)<0){
+			item.setMap(null);
+			markers.splice(i,1);
+			changed = true;
+		}
+	});
+	if(changed){
+		listRefresh();
+	}
+}
 
 // -----Обновление инфы о метках команд-----------//
 
@@ -434,7 +489,7 @@ function multiRefresh(){
 			$(this).text(teamData[indx]);
 		});
 	}
-	setTimeout(multiRefresh, 1000);
+	setTimeout(multiRefresh, 2000);
 	mainInit();
 	getMarkersFromServer();
 }

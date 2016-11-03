@@ -7,21 +7,6 @@ function deletem(){
 	deleteMarker(id);
 }
 
-function refreshMarkersArray(data) {
-	markers = [];
-	$.each(data, function(key, val){
-		var marker = new google.maps.Marker({
-			position: {lat: parseFloat(val.lat), lng: parseFloat(val.lon)},
-			map: gmap,
-			icon: markerImage,
-			draggable: true
-		});
-		markers.push(marker);
-	});
-	listRefresh();
-	markersRefresh();
-}
-
 //-----------MARKERS-----------
 
 function Marker(id, code, lat, lon, data) {
@@ -41,7 +26,7 @@ function insertMarker(pos, code){
 function updateMarker(id, pos, code){
 	var marker = new Marker(id, code, pos[0], pos[1], null);
 	var jsonObj = JSON.stringify(marker);
-	console.log(marker);
+	//console.log(marker);
 	$.ajax({
        type: 'POST',
        url: 'database/insertdata.php',
@@ -55,16 +40,17 @@ function updatePosition(code, lat, lon){
 	var marker = new Marker(null, code, lat, lon, null);
 	var jsonObj = JSON.stringify(marker);
 	$.ajax({
-    type: 'POST',
-    url: 'database/insertdata.php',
-    data: jsonObj,
-    dataType: 'json'
+		type: 'POST',
+		url: 'database/insertdata.php',
+		data: jsonObj,
+		dataType: 'json'
 	})
 }
 
 //Берет маркеры из БД.
 //Возвращает массив маркеров со структурой как у объекта Marker.
 function getMarkersFromServer() {
+	console.log("getMarkersFromServer");
 	$.getJSON("database/selectdata.php")
 		.success(function(data) {
 			refreshMarkersArray(data)
