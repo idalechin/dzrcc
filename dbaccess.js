@@ -19,12 +19,12 @@ function Marker(id, code, lat, lon, data) {
 
 //Добавление маркера в базу.
 function insertMarker(pos, code){
-	updateMarker(null, pos, code);
+	updateMarker(null, code, pos[0], pos[1]);
 }
 
 //Добавление или обновление (если id == null) маркера в базе.
-function updateMarker(id, pos, code){
-	var marker = new Marker(id, code, pos[0], pos[1], null);
+function updateMarker(id, code, lat, lon){
+	var marker = new Marker(id, code, lat, lon, null);
 	var jsonObj = JSON.stringify(marker);
 	//console.log(marker);
 	$.ajax({

@@ -77,7 +77,7 @@ function removeItem(){
 	$(document).on('click', '[data-toggle="delete-item"]', function () {
 		var $id = $(this).closest('.point-list__item').attr('data-id');
 		removeMarker($id);
-		markersRefresh();
+		//markersRefresh();
 	});
 }
 
@@ -155,8 +155,8 @@ function clickCloseModal() {
         var panel = $(".modal");
         if (!panel.is(e.target) && panel.has(e.target).length === 0 && $(".modal:visible").length) {
             closeModal(null);
-            listRefresh();
-            markersRefresh();
+            //listRefresh();
+            //markersRefresh();
         }
     });
 }
@@ -240,8 +240,9 @@ function openModal(pos) {
 
 function closeModal(code) {
 	var pos = $('.modal').data('position');
-	if(pos != null)
-	  addMarker(pos, code);
+	if(code != null){
+		insertMarker(pos, code);
+	}
 	$('.modal').data('position', null);
 	$('.modal__back').addClass('hidden')
 }
@@ -277,7 +278,7 @@ function listRefresh() {
 }
 
 function markersRefresh() {
-	markers.forEach(function(item, i, arr) {
+	/* markers.forEach(function(item, i, arr) {
 		item.setMap(gmap);
 		google.maps.event.addListener(item, "dblclick", function(e) {
 			removeMarker(item.id);
@@ -291,7 +292,7 @@ function markersRefresh() {
 			itemSetIcon(item, markerImage, null);
 			itemRemoveHover(item.id);
 		});
-	});
+	}); */
 
 }
 
@@ -330,7 +331,7 @@ function createGMap() {
 			}
 		});
 		teamMarkers.push(gmarker);
-		latlng = {lat: 51.681538, lng: 39.200271};
+		//latlng = {lat: 51.681538, lng: 39.200271};
 	}
 	
 	teamMarkers.forEach(function(mark, i, arr) {
@@ -345,19 +346,20 @@ function createGMap() {
 
 	// Добавление события создания маркера двойныим кликом
     google.maps.event.addListener(gmap, "dblclick", function(e) {
-		var rightClickPosition = [];
-        rightClickPosition[0] = e.latLng.lat();
-		rightClickPosition[1] = e.latLng.lng();
-		openModal(rightClickPosition); //открывает окно ввода кода и передает позицию
-        //addMarker(rightClickPosition);
+		var pos = e.latLng;
+	
+        addMarker(pos.lat(), pos.lng());
     });
 }
 
 //-----Добавление элементов-----------//
 
-function addMarker(pos, code) {
-	insertMarker(pos, code); //добавление маркера в БД
-	
+function addMarker(lat, lng) {
+	var rightClickPosition = [];
+	rightClickPosition[0] = lat;
+	console.log(lat);
+	rightClickPosition[1] = lng;
+	openModal(rightClickPosition); //открывает окно ввода кода и передает позицию
 }
 
 function addItem(i, title) {
@@ -411,10 +413,7 @@ function initSearchBox(){
         var bounds = new google.maps.LatLngBounds();
 
 	    var pos = places[0].geometry.location;
-		var rightClickPosition = [];
-        rightClickPosition[0] = pos.lat();
-		rightClickPosition[1] = pos.lng();
-	    openModal(rightClickPosition);
+		addMarker(pos.lat(), pos.lng());
 		$('#pac-input').val('');
 
 		bounds.extend(pos);
@@ -436,6 +435,10 @@ function setMarkerListeners(marker){
 	google.maps.event.addListener(marker, "mouseout", function(e) {
 		itemSetIcon(marker, markerImage, null);
 		itemRemoveHover(marker.id);
+	});
+	google.maps.event.addListener(marker, "mouseup", function(e) {
+		console.log("update event");
+		updateMarker(marker.id, marker.title, e.latLng.lat(), e.latLng.lng());
 	});
 }
 
@@ -469,7 +472,6 @@ function refreshMarkersArray(data) {
 	var dbMarkersIds = [];
 	$.each(data, function(key, val){
 		if(markersIds.indexOf(val.id)<0){
-			console.log('ok')
 			var marker = new google.maps.Marker({
 				position: {lat: parseFloat(val.lat), lng: parseFloat(val.lon)},
 				map: gmap,
@@ -512,7 +514,7 @@ function multiRefresh(){
 			$(this).text(teamData[indx]);
 		});
 	}
-	setTimeout(multiRefresh, 2000);
+	setTimeout(multiRefresh, 1000);
 	mainInit();
 	getMarkersFromServer();
 }
