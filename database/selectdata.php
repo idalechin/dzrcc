@@ -26,7 +26,7 @@
 		die("Connection failed: " . $conn->connect_error);
 	} 
 
-	$sql = "SELECT id, code, lat, lng FROM markers";
+	$sql = "SELECT id, code, lat, lng, data FROM markers";
 	if (isset($_GET["id"])){
 		$id = $_GET["id"];
 		$sql = "SELECT id, code, lat, lng, data FROM markers WHERE id = $id";

@@ -31,7 +31,10 @@ function updateMarker(id, code, lat, lon){
        type: 'POST',
        url: 'database/insertdata.php',
        data: jsonObj,
-       dataType: 'json'
+       dataType: 'json',
+		success: function (data) {
+			console.log(data);
+        }
 	})
 }
 
@@ -53,6 +56,7 @@ function getMarkersFromServer() {
 	console.log("getMarkersFromServer");
 	$.getJSON("database/selectdata.php")
 		.success(function(data) {
+			console.log(data);
 			refreshMarkersArray(data)
 		});
 }
@@ -78,11 +82,18 @@ function deleteMarker(id){
 	var jsonObj = JSON.stringify(marker);
 	console.log(jsonObj);
 	$.ajax({
-    type: 'POST',
-    url: 'database/deletedata.php',
-    data: jsonObj,
-    dataType: 'json'
-	})
+		type: 'POST',
+		url: 'database/deletedata.php',
+		data: jsonObj,
+		dataType: 'json',
+		success: function (msg) {
+            if (msg) {
+                console.log("deleted");
+            } else {
+                console.log("not deleted");
+            }
+        }
+	});
 }
 
 

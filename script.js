@@ -23,6 +23,8 @@ var markersIds = [];
 var teamMarkers = [];
 var teamData = [];
 var teamInfo;
+var markerdblClick = false;
+var mouseDownPos;
 
 //--------Иконки--------//
 
@@ -305,7 +307,7 @@ function createGMap() {
 		});
 		teamMarkers.push(gmarker);
 	}
-	
+
 	teamMarkers.forEach(function(mark, i, arr) {
       google.maps.event.addListener(mark, "click", function(e) {
 			if(teamInfo){teamInfo.close()};
@@ -318,9 +320,12 @@ function createGMap() {
 
 	// Добавление события создания маркера двойныим кликом
     google.maps.event.addListener(gmap, "dblclick", function(e) {
-		var pos = e.latLng;
-	
-        addMarker(pos.lat(), pos.lng());
+		//if(!markerdblClick) {
+            var pos = e.latLng;
+            addMarker(pos.lat(), pos.lng());
+        //}else {
+        //    markerdblClick = false;
+		//}
     });
 	
 	initGeocoder();
@@ -355,7 +360,6 @@ function addInfoWindow(item) {
 
 function initSearchBox(){
 	//Search Box
-
     var input = document.getElementById('pac-input');
     var code = document.getElementById('id-input');
     var text = document.getElementById('text');
@@ -399,8 +403,8 @@ function initSearchBox(){
 function setMarkerListeners(marker){
 	marker.setMap(gmap);
 	google.maps.event.addListener(marker, "dblclick", function(e) {
+        //markerdblClick = true;
 		removeMarker(marker.id);
-		markersRefresh();
 	});
 	google.maps.event.addListener(marker, "mouseover", function(e) {
 		itemSetIcon(marker, markerImageHover, null);
@@ -410,9 +414,17 @@ function setMarkerListeners(marker){
 		itemSetIcon(marker, markerImage, null);
 		itemRemoveHover(marker.id);
 	});
+    google.maps.event.addListener(marker, "mousedown", function(e) {
+		 mouseDownPos = marker.position.lat()+"."+marker.position.lng();
+		 console.log("down "+mouseDownPos);
+	 });
 	google.maps.event.addListener(marker, "mouseup", function(e) {
-		console.log("update event");
-		updateMarker(marker.id, marker.title, e.latLng.lat(), e.latLng.lng());
+		var pos = marker.position.lat()+"."+marker.position.lng();
+        console.log("up "+marker.position);
+		if(pos!=mouseDownPos) {
+            updateMarker(marker.id, marker.title, e.latLng.lat(), e.latLng.lng());
+            mouseDownPos = null;
+        }
 	});
 }
 
@@ -480,8 +492,11 @@ function refreshMarkersArray(data) {
 
 function multiRefresh(){
 	for (var i = 1; i <= teamCount; i++) {
-		doRefresh(i);
+		//doRefresh(i);
 	}
+
+    if (!gmap) {
+        createGMap();}
 	
 	if(teamData.length>0){
 		$('.team_data').each(function(indx, element){
