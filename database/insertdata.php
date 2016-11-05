@@ -24,8 +24,8 @@
 		$sql = "INSERT INTO markers (code, lat, lng, data)
 		VALUES ( '" . $code . "', '" . $lat . "', '" . $lon . "', '" . $data . "');";
 	} else {
-		$sql = "DELETE FROM markers WHERE id = $id; INSERT INTO markers (id, code, lat, lng, data)
-		VALUES ('" . $id . "', '" . $code . "', '" . $lat . "', '" . $lon . "', '" . $data . "');";
+		$sql = "DELETE FROM markers WHERE id = $id; INSERT INTO markers (code, lat, lng, data)
+		VALUES ('" . $code . "', '" . $lat . "', '" . $lon . "', '" . $data . "');";
 	}
 	if ($conn->multi_query($sql) === TRUE) {
 		echo "New records created successfully";

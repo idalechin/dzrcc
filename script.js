@@ -77,7 +77,6 @@ function removeItem(){
 	$(document).on('click', '[data-toggle="delete-item"]', function () {
 		var $id = $(this).closest('.point-list__item').attr('data-id');
 		removeMarker($id);
-		//markersRefresh();
 	});
 }
 
@@ -135,28 +134,20 @@ function clickCloseModal() {
 	$(document).on('click', '.modal__btn--ok', function (e) {
 		var code = $('.modal__input').val();
 		closeModal(code);
-        //listRefresh();
-        //markersRefresh();
     });
     $(document).on('click', '.modal__btn--no', function (e) {
         closeModal(null);
-        //listRefresh();
-        //markersRefresh();
     });
 	$(document).on('keypress', '.modal', function (e) {
 		if (e.which == 13) {
 			var code = $('.modal__input').val();
 			closeModal(code);
-			//listRefresh();
-			//markersRefresh();
 		}
 	});
     $(document).on('mousedown', function (e){
         var panel = $(".modal");
         if (!panel.is(e.target) && panel.has(e.target).length === 0 && $(".modal:visible").length) {
             closeModal(null);
-            //listRefresh();
-            //markersRefresh();
         }
     });
 }
@@ -277,24 +268,6 @@ function listRefresh() {
 	});
 }
 
-function markersRefresh() {
-	/* markers.forEach(function(item, i, arr) {
-		item.setMap(gmap);
-		google.maps.event.addListener(item, "dblclick", function(e) {
-			removeMarker(item.id);
-			markersRefresh();
-		});
-		google.maps.event.addListener(item, "mouseover", function(e) {
-			itemSetIcon(item, markerImageHover, null);
-			itemAddHover(item.id);
-		});
-		google.maps.event.addListener(item, "mouseout", function(e) {
-			itemSetIcon(item, markerImage, null);
-			itemRemoveHover(item.id);
-		});
-	}); */
-
-}
 
 //----- Карта -----------//
 
@@ -331,7 +304,6 @@ function createGMap() {
 			}
 		});
 		teamMarkers.push(gmarker);
-		//latlng = {lat: 51.681538, lng: 39.200271};
 	}
 	
 	teamMarkers.forEach(function(mark, i, arr) {
@@ -350,6 +322,8 @@ function createGMap() {
 	
         addMarker(pos.lat(), pos.lng());
     });
+	
+	initGeocoder();
 }
 
 //-----Добавление элементов-----------//
