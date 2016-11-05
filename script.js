@@ -16,14 +16,13 @@ $(function() {
 // Количество команд:
 var teamCount = 6;
 //------------------
-var gmap, marker;
+var gmap;
 var dte, lat, lon, utc;
 var markers = [];
 var markersIds = [];
 var teamMarkers = [];
 var teamData = [];
 var teamInfo;
-var markerdblClick = false;
 var mouseDownPos;
 
 //--------Иконки--------//
@@ -320,12 +319,8 @@ function createGMap() {
 
 	// Добавление события создания маркера двойныим кликом
     google.maps.event.addListener(gmap, "dblclick", function(e) {
-		//if(!markerdblClick) {
-            var pos = e.latLng;
-            addMarker(pos.lat(), pos.lng());
-        //}else {
-        //    markerdblClick = false;
-		//}
+		var pos = e.latLng;
+		addMarker(pos.lat(), pos.lng());
     });
 	
 	initGeocoder();
@@ -403,7 +398,6 @@ function initSearchBox(){
 function setMarkerListeners(marker){
 	marker.setMap(gmap);
 	google.maps.event.addListener(marker, "dblclick", function(e) {
-        //markerdblClick = true;
 		removeMarker(marker.id);
 	});
 	google.maps.event.addListener(marker, "mouseover", function(e) {
