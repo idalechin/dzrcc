@@ -31,10 +31,7 @@ function updateMarker(id, code, lat, lon){
        type: 'POST',
        url: 'database/insertdata.php',
        data: jsonObj,
-       dataType: 'json',
-		success: function (data) {
-			console.log(data);
-        }
+       dataType: 'json'
 	})
 }
 
@@ -53,10 +50,10 @@ function updatePosition(code, lat, lon){
 //Берет маркеры из БД.
 //Возвращает массив маркеров со структурой как у объекта Marker.
 function getMarkersFromServer() {
-	console.log("getMarkersFromServer");
+	//console.log("getMarkersFromServer");
 	$.getJSON("database/selectdata.php")
 		.success(function(data) {
-			console.log(data);
+			//console.log(data);
 			refreshMarkersArray(data)
 		});
 }
@@ -80,19 +77,12 @@ function getMarkerByCode(code){
 function deleteMarker(id){
 	var marker = new Marker(id, null,null,null);
 	var jsonObj = JSON.stringify(marker);
-	console.log(jsonObj);
+	//console.log(jsonObj);
 	$.ajax({
 		type: 'POST',
 		url: 'database/deletedata.php',
 		data: jsonObj,
-		dataType: 'json',
-		success: function (msg) {
-            if (msg) {
-                console.log("deleted");
-            } else {
-                console.log("not deleted");
-            }
-        }
+		dataType: 'json'
 	});
 }
 

@@ -22,7 +22,8 @@ var markers = [];
 var markersIds = [];
 var teamMarkers = [];
 var teamData = [];
-var teamInfo;
+var teamInfowindow;
+var markerInfowindow;
 var mouseDownPos;
 
 //--------Иконки--------//
@@ -265,7 +266,6 @@ function listRefresh() {
 	$('.point-list').empty();
 	markers.forEach(function(item, i) {
 		addItem(markers[i].id, markers[i].title);
-		addInfoWindow(item);
 	});
 }
 
@@ -280,7 +280,7 @@ function createGMap() {
 	//----
     var latlng = {lat: 51.661538, lng: 39.200271},
         myOptions = {
-          zoom: 13,
+          zoom: 12,
           center: latlng,
           mapTypeControl: false,
 		  zoomControl: false,
@@ -309,11 +309,11 @@ function createGMap() {
 
 	teamMarkers.forEach(function(mark, i, arr) {
       google.maps.event.addListener(mark, "click", function(e) {
-			if(teamInfo){teamInfo.close()};
-			teamInfo = new google.maps.InfoWindow({
+			if(teamInfowindow){teamInfowindow.close()};
+			teamInfowindow = new google.maps.InfoWindow({
 				content: '<div>'+getTeamsInfo(i) +':<br>'+ mark.getPosition().lat() + ', ' + mark.getPosition().lng()+'</div>'
 			});
-			teamInfo.open(gmap, mark);
+			teamInfowindow.open(gmap, mark);
 		});
     });
 
@@ -331,7 +331,6 @@ function createGMap() {
 function addMarker(lat, lng) {
 	var rightClickPosition = [];
 	rightClickPosition[0] = lat;
-	console.log(lat);
 	rightClickPosition[1] = lng;
 	openModal(rightClickPosition); //открывает окно ввода кода и передает позицию
 }
@@ -342,15 +341,6 @@ function addItem(i, title) {
 		text = '';
 	}
 	$('.point-list').append('<li class=\"point-list__item\" data-id=\"' + i +'\"><span class=\"point-list__text\">№' + i + ' <span class=\"point-list__name\">' + text + '</span></span><span class=\"point-list__delete\" data-toggle=\"delete-item\">&#10060;</span></li>');
-}
-
-function addInfoWindow(item) {
-	var infowindow = new google.maps.InfoWindow({
-		content: '<div>(' + item.id + ') ' + item.title + '</div>'
-	});
-	google.maps.event.addListener(item, "click", function(e) {
-		infowindow.open(gmap, item);
-	});
 }
 
 function initSearchBox(){
@@ -397,6 +387,13 @@ function initSearchBox(){
 
 function setMarkerListeners(marker){
 	marker.setMap(gmap);
+    google.maps.event.addListener(marker, "click", function(e) {
+    	if(markerInfowindow){markerInfowindow.close();}
+        markerInfowindow = new google.maps.InfoWindow({
+            content: '<div>(' + marker.id + ') ' + marker.title + '</div>'
+        });
+        markerInfowindow.open(gmap, marker);
+    });
 	google.maps.event.addListener(marker, "dblclick", function(e) {
 		removeMarker(marker.id);
 	});
@@ -488,10 +485,10 @@ function multiRefresh(){
 	for (var i = 1; i <= teamCount; i++) {
 		//doRefresh(i);
 	}
-
+	//----------Удалить!!!
     if (!gmap) {
-        createGMap();}
-	
+        createGMap();initSearchBox();}
+	//--------------------
 	if(teamData.length>0){
 		$('.team_data').each(function(indx, element){
 			$(this).text(teamData[indx]);

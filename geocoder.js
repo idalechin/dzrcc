@@ -3,18 +3,18 @@ var geocoder;
 var addr;
 function initGeocoder(){
 	geocoder = new google.maps.Geocoder;
-	/* gmap.addListener('click', function(e) {
+	gmap.addListener('rightclick', function(e) {
 		if(geoInfowindow){geoInfowindow.close()};
 		var pos = e.latLng;
 		//var res = getAddress(pos);
 		//alert(res);
 		showGeoInfo(pos);
-	}); */
+	});
 }
 
 function showGeoInfo(pos){
 	geocoder.geocode({'location': pos}, function(results, status) {
-		//console.log(results);
+		console.log(results);
 		if (status === google.maps.GeocoderStatus.OK) {
 			if (results[0]) {
 				var address = results[0].address_components[2].short_name+", "+results[0].address_components[1].short_name+", "+results[0].address_components[0].short_name;
