@@ -1,4 +1,7 @@
 $(function() {
+    createGMap();
+    initSearchBox();
+    initGeocoder();
     multiRefresh();
     removeItem();
     hoverDelete();
@@ -17,10 +20,11 @@ $(function() {
 var teamCount = 6;
 //------------------
 var gmap;
-var dte, lat, lon, utc;
+//var dte, lat, lon, utc;
 var markers = [];
 var markersIds = [];
-var teamMarkers = [];
+var teams = [];
+var teamsIds = [];
 var teamData = [];
 var teamInfowindow;
 var markerInfowindow;
@@ -186,7 +190,7 @@ function clickOutMobilePanel() {
 function carToCenter() {
 	$(document).on('click', '.team', function (e) {
 	   var $id = $(this).attr('data-car-id');
-	   gmap.panTo(teamMarkers[$id].position);
+	   gmap.panTo(teams[$id].position);
 	});
 }
 
@@ -291,7 +295,8 @@ function createGMap() {
     };
     gmap = new google.maps.Map(document.getElementById("googlemap"), myOptions);
 
-	//Создание меток команд
+    //RIP
+/*	//Создание меток команд
 	for (var q = 0; q<teamCount; q++){
 		gmarker = new google.maps.Marker({
 			position: latlng,
@@ -304,10 +309,10 @@ function createGMap() {
 				anchor: new google.maps.Point(12, 24)
 			}
 		});
-		teamMarkers.push(gmarker);
+		teams.push(gmarker);
 	}
 
-	teamMarkers.forEach(function(mark, i, arr) {
+	teams.forEach(function(mark, i, arr) {
       google.maps.event.addListener(mark, "click", function(e) {
 			if(teamInfowindow){teamInfowindow.close()};
 			teamInfowindow = new google.maps.InfoWindow({
@@ -321,9 +326,8 @@ function createGMap() {
     google.maps.event.addListener(gmap, "dblclick", function(e) {
 		var pos = e.latLng;
 		addMarker(pos.lat(), pos.lng());
-    });
-	
-	initGeocoder();
+    });*/
+
 }
 
 //-----Добавление элементов-----------//
@@ -419,6 +423,16 @@ function setMarkerListeners(marker){
 	});
 }
 
+function setCarListeners(carMarker){
+    google.maps.event.addListener(carMarker, "click", function(e) {
+        if(teamInfowindow){teamInfowindow.close()};
+        teamInfowindow = new google.maps.InfoWindow({
+            content: '<div>'+getTeamsInfo(i) +':<br>'+ carMarker.getPosition().lat() + ', ' + carMarker.getPosition().lng()+'</div>'
+        });
+        teamInfowindow.open(gmap, carMarker);
+    });
+}
+
 function refreshMarkersArray2(data) {
 	var tmp = markers;
 	markers = [];
@@ -479,28 +493,51 @@ function refreshMarkersArray(data) {
 	}
 }
 
+function refreshCarsArray(data) {
+    $.each(data, function(key, val){
+        if(teamsIds.indexOf(val.id)<0){
+            var carMarker = new google.maps.Marker({
+                position: {lat: parseFloat(val.lat), lng: parseFloat(val.lon)},
+                map: gmap,
+                title: "Команда "+(val.id),
+                icon: {
+                    url: 'img/car_' + val.id + '.svg',
+                    size: new google.maps.Size(24, 24),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(12, 24)
+                }
+            });
+            carMarker.id = val.id;
+            teams.push(carMarker);
+            teamsIds.push(val.id);
+            setCarListeners(carMarker);
+        } else {
+            teams.forEach(function(item, i, arr) {
+            	if(item.id==val.id){
+            		item.setPosition({lat: parseFloat(val.lat), lng: parseFloat(val.lon)});
+				}
+            });
+		}
+
+    });
+}
+
 // -----Обновление инфы о метках команд-----------//
 
 function multiRefresh(){
-	for (var i = 1; i <= teamCount; i++) {
-		//doRefresh(i);
-	}
-	//----------Удалить!!!
-    if (!gmap) {
-        createGMap();initSearchBox();}
-	//--------------------
 	if(teamData.length>0){
 		$('.team_data').each(function(indx, element){
 			$(this).text(teamData[indx]);
 		});
 	}
-	setTimeout(multiRefresh, 1000);
+	setTimeout(multiRefresh, 3000);
 	mainInit();
 	getMarkersFromServer();
+	getLastCarPositions();
 }
 
-
-function doRefresh(teamId) {
+//RIP
+/*function doRefresh(teamId) {
 	var xhr;
 	try {
 		xhr = new XMLHttpRequest();
@@ -523,7 +560,7 @@ function doRefresh(teamId) {
 						initSearchBox();
 					} else {
 						var latlng = new google.maps.LatLng(lat, lon);
-						teamMarkers[teamId-1].setPosition(latlng);
+						teams[teamId-1].setPosition(latlng);
 					}
 					if (utc) {
 						utc_dte = new Date(parseInt(utc));
@@ -540,7 +577,7 @@ function doRefresh(teamId) {
 	var path = "position/team"+teamId+".php?"+ Math.random();
 	xhr.open("GET", path,  true);
 	xhr.send(null);
-}
+}*/
 
 
 

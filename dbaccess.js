@@ -1,5 +1,6 @@
 $(function () {
-	getMarkersFromServer();
+	//getMarkersFromServer();
+	//getLastCarPositions();
 });
 
 function deletem(){
@@ -138,10 +139,11 @@ function getCarPosition(id){
 
 //Возвращает массив последних позиций для каждого экипажа. Структура такая же как у CarPosition
 function getLastCarPositions(){
-	$.getJSON('database/cars/selectposition.php', function (data) {
-		return data;
-
-	});
+	$.getJSON('database/cars/selectposition.php')
+        .success(function(data) {
+            console.log(data);
+            refreshCarsArray(data)
+        });
 }
 
 //Очищает БД с точками
