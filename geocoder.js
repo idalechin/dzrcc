@@ -32,14 +32,18 @@ function showGeoInfo(pos){
     });
 }
 
-function getAddress(pos){
+function getAddress(marker, val){
 	var a = "0";
-	geocoder.geocode({'location': pos}, function(results, status) {
-		console.log(results);
+	geocoder.geocode({'location': marker.position}, function(results, status) {
 		if (status === google.maps.GeocoderStatus.OK) {
 			if (results[0]) {
-				a = results[0].address_components[2].short_name+", "+results[0].address_components[1].short_name+", "+results[0].address_components[0].short_name;
-				
+				a = results[0].address_components[0].short_name+", "+results[0].address_components[1].short_name;
+				marker.title = a;
+				marker.id = val.id;
+				markersIds.push(val.id);
+				markers.push(marker);
+				setMarkerListeners(marker);
+				listRefresh();
 			} else {
 				window.alert('No results found');
 		    }
@@ -47,5 +51,5 @@ function getAddress(pos){
 		    window.alert('Geocoder failed due to: ' + status);
 		}
     });
-	return a;
+
 }
