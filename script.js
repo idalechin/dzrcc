@@ -321,12 +321,12 @@ function createGMap() {
 			teamInfowindow.open(gmap, mark);
 		});
     });
-
+	*/
 	// Добавление события создания маркера двойныим кликом
     google.maps.event.addListener(gmap, "dblclick", function(e) {
 		var pos = e.latLng;
 		addMarker(pos.lat(), pos.lng());
-    });*/
+    });
 
 }
 
