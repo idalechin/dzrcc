@@ -344,7 +344,7 @@ function addItem(i, title) {
 	if(title == undefined){
 		text = '';
 	}
-	$('.point-list').append('<li class=\"point-list__item\" data-id=\"' + i +'\"><span class=\"point-list__text\">№' + i + ' <span class=\"point-list__name\">' + text + '</span></span><span class=\"point-list__delete\" data-toggle=\"delete-item\">&#10060;</span></li>');
+	$('.point-list').append('<li class=\"point-list__item\" data-id=\"' + i +'\"><span class=\"point-list__text\"><span class=\"point-list__name\">' + text + '</span></span><span class=\"point-list__delete\" data-toggle=\"delete-item\">&#10060;</span></li>');
 }
 
 function initSearchBox(){
@@ -394,7 +394,7 @@ function setMarkerListeners(marker){
     google.maps.event.addListener(marker, "click", function(e) {
     	if(markerInfowindow){markerInfowindow.close();}
         markerInfowindow = new google.maps.InfoWindow({
-            content: '<div>(' + marker.id + ') ' + marker.title + '</div>'
+            content: '<div>' + marker.title + '</div>'
         });
         markerInfowindow.open(gmap, marker);
     });
@@ -470,11 +470,7 @@ function refreshMarkersArray(data) {
 				draggable: true,
 				title: val.code
 			});
-			marker.id = val.id;
-			markersIds.push(val.id);
-			markers.push(marker);
-			setMarkerListeners(marker);
-			changed = true;
+			getAddress(marker, val);
 		}
 		dbMarkersIds.push(val.id);
 		

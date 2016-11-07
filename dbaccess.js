@@ -141,7 +141,6 @@ function getCarPosition(id){
 function getLastCarPositions(){
 	$.getJSON('database/cars/selectposition.php')
         .success(function(data) {
-            console.log(data);
             refreshCarsArray(data)
         });
 }
