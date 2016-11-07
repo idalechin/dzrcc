@@ -470,7 +470,15 @@ function refreshMarkersArray(data) {
 				draggable: true,
 				title: val.code
 			});
-			getAddress(marker, val);
+			if(marker.title === ''){
+				getAddress(marker, val);
+			} else {
+				marker.id = val.id;
+				markersIds.push(val.id);
+				markers.push(marker);
+				setMarkerListeners(marker);
+				changed = true;
+			}
 		}
 		dbMarkersIds.push(val.id);
 		
