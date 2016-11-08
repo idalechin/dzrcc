@@ -141,7 +141,7 @@ function getCarPosition(id){
 function getLastCarPositions(){
 	$.getJSON('database/cars/selectposition.php')
         .success(function(data) {
-            refreshCarsArray(data)
+            refreshTeamsArray(data)
         });
 }
 

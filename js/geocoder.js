@@ -43,7 +43,7 @@ function getAddress(marker, val){
 				markersIds.push(val.id);
 				markers.push(marker);
 				setMarkerListeners(marker);
-				listRefresh();
+				markerListRefresh();
 			} else {
 				window.alert('No results found');
 		    }
