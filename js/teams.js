@@ -34,20 +34,21 @@ function refreshTeamsArray(data) {
 function setTeamsListeners(teamMarker){
     google.maps.event.addListener(teamMarker, "click", function(e) {
         if(teamInfowindow){teamInfowindow.close()};
+        //console.log(teamMarker.id);
         teamInfowindow = new google.maps.InfoWindow({
-            content: '<div>'+getTeamsInfo(i) +':<br>'+ teamMarker.getPosition().lat() + ', ' + teamMarker.getPosition().lng()+'</div>'
+            content: '<div>'+getTeamsInfo(parseInt(teamMarker.id)) +':<br>'+ teamMarker.getPosition().lat() + ', ' + teamMarker.getPosition().lng()+'</div>'
         });
         teamInfowindow.open(gmap, teamMarker);
     });
 }
 
 function addTeamToList(id) {
-    $('.teams').append('<li class="team"  data-car-id=\"' + id + '\" ><img src=\"img/car_'+id+'.svg\" class="team_image"> '+getTeamsInfo(id) + '   <span class=\"team_data\">…</span></li>');
+    $('.teams').append('<li class="team"  data-car-id=\"' + id + '\" ><img src=\"img/car_'+id+'.svg\" class="team_image"> '+getTeamsInfo(parseInt(id)) + '   <span class=\"team_data\">…</span></li>');
 }
 
 //----------
 function getTeamsInfo(id){
-    switch (id+1) {
+    switch (id) {
         case 1:
             return "\"Твоя мама\"" ;
             break;
