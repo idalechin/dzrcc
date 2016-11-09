@@ -109,7 +109,11 @@ function clickOutMobilePanel() {
 function carToCenter() {
     $(document).on('click', '.team', function (e) {
         var $id = $(this).attr('data-car-id');
-        gmap.panTo(teams[$id-1].position);
+        teams.forEach(function(item, i, arr) {
+            if(item.id==$id ){
+                gmap.panTo(item.position);
+            }
+        });
     });
 }
 

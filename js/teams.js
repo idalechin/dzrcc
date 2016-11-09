@@ -42,7 +42,7 @@ function setTeamsListeners(teamMarker){
 }
 
 function addTeamToList(id) {
-    $('.teams').append('<li class="team"  data-car-id=\"' + id + '\" ><img src=\"img/car_'+id+'.svg\" class="team_image"> '+getTeamsInfo(parseInt(id)) + '   <span class=\"team_data\">…</span></li>');
+    $('.teams').append('<li class="team"  data-car-id=\"' + id + '\" ><img src=\"img/car_'+ id +'.svg\" class="team_image"> '+getTeamsInfo(parseInt(id)) + '   <span class=\"team_data\">…</span></li>');
 }
 
 //----------
