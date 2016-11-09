@@ -98,26 +98,43 @@ main{
     border-bottom: 2px solid rgba(0,0,0, 0.4);
 }
 
-.point-list__item{
+.point-list__content-wrapper{
     display: flex;
+    width: 100%;
+}
+
+.point-list__item{
+    display: block;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid rgba(0,0,0, 0.2);
-    height: 36px;
+    height: 40px;
     cursor: pointer;
     padding: 0 7px;
-    position: relative;
     background: #fff;
     transition: all ease 50ms;
-    line-height: 36px;
+    line-height: 40px;
 }
 
-.point-list__item:hover{
-    box-shadow: 0 0 6px rgba(0,0,0,.24),0 6px 10px rgba(0,0,0,.38);
-    bottom: 2px;
-    height: 37px;
-    z-index: 3;
-    line-height: 38px;
+.point-list__item:after{
+    content: '';
+    height: 3px;
+    background: #4d90fe;
+    width: 0;
+    bottom: 4px;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+    transition: all ease-out 200ms;
+}
+
+.point-list__item:hover:after{
+    width: calc(100% + 18px);
+    right: 9px;
+}
+
+.hover--delete:hover:after{
+    width: 0;
 }
 
 .point-list__item + .point-list__item{
@@ -221,7 +238,7 @@ main{
 .point-list__name{
     display: inline-block;
     max-width: 100%;
-    height: 36px;
+    height: 40px;
 }
 
 .set-item-name{
