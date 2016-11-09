@@ -1,4 +1,3 @@
-
 var markers = [],
     markersIds = [],
     markerInfowindow,
@@ -43,8 +42,6 @@ function refreshMarkersArray(data) {
                 setMarkerListeners(marker);
                 markerListRefresh();
             }
-
-
         }
         dbMarkersIds.push(val.id);
     });
@@ -108,8 +105,10 @@ function addMarker(lat, lng) {
     openModal(rightClickPosition); //открывает окно ввода кода и передает позицию
 }
 
-function addMarkerToList(i, text) {
-    $('.point-list').append('<li class=\"point-list__item\" data-id=\"' + i +'\"><div class="point-list__content-wrapper"><span class=\"point-list__text\"><span class=\"point-list__name\">' + text + '</span></span><span class=\"point-list__delete\" data-toggle=\"delete-item\">&#10060;</span></div></li>');
+function addMarkerToList(marker) {
+    var i = marker.id,
+        text = marker.title;
+    $('.point-list').append('<li class=\"point-list__item\" data-id=\"' + i +'\"><div class="point-list__content-wrapper"><span class=\"point-list__text\"><span class=\"point-list__name\">' + text + '</span></span><i class="point-list__edit material-icons" data-toggle=\"edit-item\">&#xE254;</i><span class=\"point-list__delete\" data-toggle=\"delete-item\">&#10060;</span></div></li>');
 }
 
 function removeMarker(id) {
@@ -135,6 +134,6 @@ function removeMarkerFromList(id) {
 function markerListRefresh() {
     $('.point-list').empty();
     markers.forEach(function(item, i) {
-        addMarkerToList(markers[i].id, markers[i].title);
+        addMarkerToList(item);
     });
 }

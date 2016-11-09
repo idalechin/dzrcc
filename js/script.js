@@ -3,10 +3,11 @@ $(function() {
     initSearchBox();
     initGeocoder();
     multiRefresh();
-    removeItem();
+    removeMarkerItem();
+	editMarkerItem();
     hoverDelete();
+	hoverEdit();
 	hoverItem();
-	admin();
 	clickCenter();
 	clickCloseModal();
 	carToCenter();
