@@ -118,14 +118,15 @@ main{
 
 .point-list__item:after{
     content: '';
-    height: 3px;
+    height: 4px;
     background: #4d90fe;
     width: 0;
-    bottom: 4px;
+    bottom: 3px;
     margin: 0 auto;
     display: block;
     position: relative;
     transition: all ease-out 200ms;
+    z-index: 10;
 }
 
 .point-list__item:hover:after{
@@ -133,7 +134,7 @@ main{
     right: 9px;
 }
 
-.hover--delete:hover:after{
+.hover--delete:hover:after, .hover--edit:hover:after{
     width: 0;
 }
 
@@ -141,9 +142,10 @@ main{
     border-top: none;
 }
 
-.point-list__delete{
+.point-list__delete, .point-list__edit{
     height: 100%;
     padding: 0 5px;
+    line-height: 40px;
 }
 
 .cross{
@@ -158,6 +160,10 @@ main{
 
 .hover--delete{
     background: rgba(255, 116, 104, 1);
+    color: #fff;
+}
+.hover--edit{
+    background:  #4caf50;
     color: #fff;
 }
 .controls {
@@ -247,10 +253,19 @@ main{
     margin: 0 5px;
 }
 
+.point-list__item:hover .point-list__name{
+    overflow-x: auto;
+}
+
 .point-list__text{
     width: 100%;
     display: flex;
     align-items: center;
+    overflow: hidden;
+}
+
+.point-list__name{
+    overflow: hidden;
 }
 
 .modal__back{

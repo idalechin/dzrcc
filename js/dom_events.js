@@ -1,16 +1,14 @@
-function removeItem(){
+function removeMarkerItem(){
     $(document).on('click', '[data-toggle="delete-item"]', function () {
         var $id = $(this).closest('.point-list__item').attr('data-id');
         removeMarker($id);
     });
 }
 
-function admin() {
-    $(document).on('click', '.admin', function () {
-        $(this).addClass('admin--checked');
-    });
-    $(document).on('click', '.admin--checked', function () {
-        $(this).removeClass('admin--checked');
+function editMarkerItem(){
+    $(document).on('click', '[data-toggle="edit-item"]', function () {
+        var $id = $(this).closest('.point-list__item').attr('data-id');
+        openModal(null, $id);
     });
 }
 
@@ -21,6 +19,17 @@ function hoverDelete() {
     );
     $(document).on('mouseleave', '[data-toggle="delete-item"]', function () {
             $(this).closest('.point-list__item').removeClass('hover--delete');
+        }
+    );
+}
+
+function hoverEdit() {
+    $(document).on('mouseenter', '[data-toggle="edit-item"]', function () {
+            $(this).closest('.point-list__item').addClass('hover--edit');
+        }
+    );
+    $(document).on('mouseleave', '[data-toggle="edit-item"]', function () {
+            $(this).closest('.point-list__item').removeClass('hover--edit');
         }
     );
 }
@@ -58,21 +67,23 @@ function clickCenter() {
 function clickCloseModal() {
     $(document).on('click', '.modal__btn--ok', function (e) {
         var code = $('.modal__input').val();
-        closeModal(code);
+        var id = $(".modal").data('marker-id');
+        closeModal(code, id);
     });
     $(document).on('click', '.modal__btn--no', function (e) {
-        closeModal(null);
+        closeModal(null, null);
     });
     $(document).on('keypress', '.modal', function (e) {
         if (e.which == 13) {
             var code = $('.modal__input').val();
-            closeModal(code);
+            var id = $(".modal").data('marker-id');
+            closeModal(code, id);
         }
     });
     $(document).on('mousedown', function (e){
         var panel = $(".modal");
         if (!panel.is(e.target) && panel.has(e.target).length === 0 && $(".modal:visible").length) {
-            closeModal(null);
+            closeModal(null, null);
         }
     });
 }
