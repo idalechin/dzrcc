@@ -109,7 +109,7 @@ function addMarker(lat, lng) {
 }
 
 function addMarkerToList(i, text) {
-    $('.point-list').append('<li class=\"point-list__item\" data-id=\"' + i +'\"><span class=\"point-list__text\"><span class=\"point-list__name\">' + text + '</span></span><span class=\"point-list__delete\" data-toggle=\"delete-item\">&#10060;</span></li>');
+    $('.point-list').append('<li class=\"point-list__item\" data-id=\"' + i +'\"><div class="point-list__content-wrapper"><span class=\"point-list__text\"><span class=\"point-list__name\">' + text + '</span></span><span class=\"point-list__delete\" data-toggle=\"delete-item\">&#10060;</span></div></li>');
 }
 
 function removeMarker(id) {
