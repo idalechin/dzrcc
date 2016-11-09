@@ -19,25 +19,27 @@ function refreshMarkersArray(data) {
     var dbMarkersIds = [];
     $.each(data, function(key, val){
         if(markersIds.indexOf(val.id)<0){
+            var code = val.code;
             var marker = new google.maps.Marker({
                 position: {lat: parseFloat(val.lat), lng: parseFloat(val.lon)},
                 map: gmap,
                 icon: markerImage,
                 draggable: true,
-                title: val.code
             });
-            if(marker.title === ''){
-                getAddress(marker, setMarkerAddress);
-
+            if(code === ''||/^\d+$/i.test(code)){
+                getAddress(marker.position, setMarkerAddress);
                 function setMarkerAddress(a) {
-                    marker.title = a;
+                    if(code===''){marker.title = a} else
+                    marker.title = (code === '') ? a : val.code+". "+a;
                     marker.id = val.id;
                     markersIds.push(val.id);
                     markers.push(marker);
                     setMarkerListeners(marker);
                     markerListRefresh();
                 }
-            } else {
+            }
+            else {
+                marker.title = code.replace(/^\d+[.)-]?/g, code.match(/^\d+/i)+".");;
                 marker.id = val.id;
                 markersIds.push(val.id);
                 markers.push(marker);
@@ -87,7 +89,11 @@ function setMarkerListeners(marker){
     google.maps.event.addListener(marker, "mouseup", function(e) {
         var pos = marker.position.lat()+"."+marker.position.lng();
         if(pos!=mouseDownPos) {
-            updateMarker(marker.id, marker.title, e.latLng.lat(), e.latLng.lng());
+            var code = "";
+            if(/^\d+/i.test(marker.title)){
+                code = marker.title.match(/^\d+/i)[0];
+            }
+            updateMarker(marker.id, code, e.latLng.lat(), e.latLng.lng());
             mouseDownPos = null;
         }
     });
