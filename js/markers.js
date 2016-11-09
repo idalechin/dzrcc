@@ -25,27 +25,26 @@ function refreshMarkersArray(data) {
                 map: gmap,
                 icon: markerImage,
                 draggable: true,
+                code: code
             });
-            if(code === ''||/^\d+$/i.test(code)){
-                getAddress(marker.position, setMarkerAddress);
-                function setMarkerAddress(a) {
-                    if(code===''){marker.title = a} else
-                    marker.title = (code === '') ? a : val.code+". "+a;
-                    marker.id = val.id;
-                    markersIds.push(val.id);
-                    markers.push(marker);
-                    setMarkerListeners(marker);
-                    markerListRefresh();
+
+            getAddress(marker.position, setMarkerAddress);
+
+            function setMarkerAddress(a) {
+                marker.address = a;
+                if(code === ''||/^\d+$/i.test(code)){
+                    marker.title = (code === '') ? a : val.code + ") " + marker.address;
+                } else {
+                    marker.title = code.replace(/^\d+[.)-]?/g, code.match(/^\d+/i)+".");
                 }
-            }
-            else {
-                marker.title = code.replace(/^\d+[.)-]?/g, code.match(/^\d+/i)+".");;
                 marker.id = val.id;
                 markersIds.push(val.id);
                 markers.push(marker);
                 setMarkerListeners(marker);
-                changed = true;
+                markerListRefresh();
             }
+
+
         }
         dbMarkersIds.push(val.id);
     });
@@ -89,9 +88,12 @@ function setMarkerListeners(marker){
     google.maps.event.addListener(marker, "mouseup", function(e) {
         var pos = marker.position.lat()+"."+marker.position.lng();
         if(pos!=mouseDownPos) {
-            var code = "";
-            if(/^\d+/i.test(marker.title)){
-                code = marker.title.match(/^\d+/i)[0];
+            var code = marker.code;
+            if(marker.code == ''){
+                code = "";
+                if(/^\d+/i.test(marker.title)){
+                    code = marker.title.match(/^\d+/i)[0];
+                }
             }
             updateMarker(marker.id, code, e.latLng.lat(), e.latLng.lng());
             mouseDownPos = null;
