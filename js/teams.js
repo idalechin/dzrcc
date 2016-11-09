@@ -34,7 +34,6 @@ function refreshTeamsArray(data) {
 function setTeamsListeners(teamMarker){
     google.maps.event.addListener(teamMarker, "click", function(e) {
         if(teamInfowindow){teamInfowindow.close()};
-        //console.log(teamMarker.id);
         teamInfowindow = new google.maps.InfoWindow({
             content: '<div>'+getTeamsInfo(parseInt(teamMarker.id)) +':<br>'+ teamMarker.getPosition().lat() + ', ' + teamMarker.getPosition().lng()+'</div>'
         });

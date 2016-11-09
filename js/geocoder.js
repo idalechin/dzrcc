@@ -32,18 +32,13 @@ function showGeoInfo(pos){
     });
 }
 
-function getAddress(marker, val){
+function getAddress(marker, callback){
 	var a = "0";
 	geocoder.geocode({'location': marker.position}, function(results, status) {
 		if (status === google.maps.GeocoderStatus.OK) {
 			if (results[0]) {
 				a = results[0].address_components[0].short_name+", "+results[0].address_components[1].short_name;
-				marker.title = a;
-				marker.id = val.id;
-				markersIds.push(val.id);
-				markers.push(marker);
-				setMarkerListeners(marker);
-				markerListRefresh();
+				callback(a);
 			} else {
 				window.alert('No results found');
 		    }
