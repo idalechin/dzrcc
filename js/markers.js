@@ -27,7 +27,16 @@ function refreshMarkersArray(data) {
                 title: val.code
             });
             if(marker.title === ''){
-                getAddress(marker, val);
+                getAddress(marker, setMarkerAddress);
+
+                function setMarkerAddress(a) {
+                    marker.title = a;
+                    marker.id = val.id;
+                    markersIds.push(val.id);
+                    markers.push(marker);
+                    setMarkerListeners(marker);
+                    markerListRefresh();
+                }
             } else {
                 marker.id = val.id;
                 markersIds.push(val.id);
@@ -74,11 +83,9 @@ function setMarkerListeners(marker){
     });
     google.maps.event.addListener(marker, "mousedown", function(e) {
         mouseDownPos = marker.position.lat()+"."+marker.position.lng();
-        console.log("down "+mouseDownPos);
     });
     google.maps.event.addListener(marker, "mouseup", function(e) {
         var pos = marker.position.lat()+"."+marker.position.lng();
-        console.log("up "+marker.position);
         if(pos!=mouseDownPos) {
             updateMarker(marker.id, marker.title, e.latLng.lat(), e.latLng.lng());
             mouseDownPos = null;

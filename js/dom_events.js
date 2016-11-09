@@ -109,6 +109,15 @@ function clickOutMobilePanel() {
 function carToCenter() {
     $(document).on('click', '.team', function (e) {
         var $id = $(this).attr('data-car-id');
-        gmap.panTo(teams[$id].position);
+        gmap.panTo(teams[$id-1].position);
+    });
+}
+
+function resizeWindowInit() {
+    $(window).on('resize', function (e) {
+        if($(window).width() < 1024){
+            mobileButtonAction();
+            clickOutMobilePanel();
+        }
     });
 }

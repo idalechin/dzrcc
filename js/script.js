@@ -10,6 +10,7 @@ $(function() {
 	clickCenter();
 	clickCloseModal();
 	carToCenter();
+	resizeWindowInit();
 	if($(window).width() < 1024){
 		mobileButtonAction();
 		clickOutMobilePanel();
