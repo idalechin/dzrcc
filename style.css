@@ -222,7 +222,6 @@ main{
     display: inline-block;
     max-width: 100%;
     height: 36px;
-    margin-left: 8px;
 }
 
 .set-item-name{
@@ -253,25 +252,26 @@ main{
     margin:auto;
     width: 300px;
     text-align: center;
+    position: relative;
 }
 
 .modal__input{
-       margin: 10px auto;
-       display: block;
-       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    margin: 10px auto;
+    display: block;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     width: 200px;
     height: 30px;
     line-height: 30px;
     padding: 0 10px;
    }
 
-.modal__btn{
-    margin: 20px auto;
+.modal__btn-wrapper{
     display: block;
-    box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
-    width: 80px;
-    background: #3779C7;
-    color: white;
+    width: 160px;
+    margin: 20px auto;
+}
+
+.modal__btn{
     outline: none;
     border: none;
     font-size: 22px;
@@ -281,15 +281,47 @@ main{
     line-height: 36px;
     cursor: pointer;
     text-transform: uppercase;
+    transition: all 200ms ease;
 }
-.modal__btn:hover {
+
+.modal__btn--ok:hover {
     box-shadow: 0 0 4px rgba(0, 0, 0, .44), 0 4px 8px rgba(0, 0, 0, .58);
 }
 
+.modal__btn--ok {
+    display: block;
+    width: 80px;
+    background: #3779C7;
+    color: white;
+    box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
+    margin: 0 auto;
+}
+
+.modal__btn--no{
+    color: rgba(0,0,0,0.78);
+    background: transparent;
+    line-height: 30px;
+    font-size:30px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.modal__btn--no i{
+    transition: all 200ms ease;
+    font-weight: 700;
+}
+
+.modal__btn--no:hover i{
+    transform: rotate(90deg);
+}
 .team_data{
     margin-left: 3px;
     color: rgba(0, 0, 0, .48);
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .btn--mobile{
@@ -331,6 +363,7 @@ main{
     }
     .point-list__title{
         font-size: 22px;
+        padding-top: 10px;
     }
     #text2{
         display: none;
@@ -373,6 +406,20 @@ main{
         z-index: 3;
         line-height: 36px;
     }
+    .panel__inner-wrapper{
+        position: absolute;
+        top: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 280px;
+        padding: 0 10px;
+    }
+    .panel__inner-wrapper--teams{
+        right: 0;
+    }
+    .panel__inner-wrapper--points{
+        left: 0;
+    }
     .btn--mobile{
         display: block;
         color: rgba(0,0,0,0.78);
@@ -397,12 +444,9 @@ main{
         box-shadow: 0 0 8px rgba(0, 0, 0, .34), 0 8px 12px rgba(0, 0, 0, .48);
         z-index: 10;
         transition: all ease 300ms;
-        padding: 0;
+        padding: 10px 0;
         overflow-x: hidden;
         overflow-y: auto;
-    }
-    .panel--mobile ul,.panel--mobile h4 {
-        display: none;
     }
     .mobile-show{
         padding: 10px;
