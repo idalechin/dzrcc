@@ -35,9 +35,8 @@ function refreshTeamsArray(data) {
 function setTeamsListeners(teamMarker) {
     google.maps.event.addListener(teamMarker, "click", function (e) {
         if (teamInfowindow) {
-            teamInfowindow.close()
+            teamInfowindow.close();
         }
-        ;
         teamInfowindow = new google.maps.InfoWindow({
             content: '<div>' + getTeamsInfo(parseInt(teamMarker.id)) + ':<br>' + teamMarker.getPosition().lat() + ', ' + teamMarker.getPosition().lng() + '</div>'
         });
@@ -50,8 +49,16 @@ function addTeamToList(id) {
 }
 
 function refreshTeamInList(id, time) {
+    var intTime = parseInt(time);
     var date = new Date(parseInt(time));
-    $('.team_data_' + id).text(date.toLocaleString().match(/\s.+$/i)[0]);
+    var $obj =  $('.team_data_' + id);
+    $obj.text((new Date(intTime)).toLocaleString().match(/\s.+$/i)[0]);
+    var curDate = +new Date();
+    if(curDate - intTime > 1000*60*5){
+        $obj.css('color', 'red');
+    }else {
+        $obj.css('color', 'black');
+    }
 }
 
 //----------

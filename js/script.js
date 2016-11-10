@@ -20,7 +20,7 @@ $(function() {
 
 
 function multiRefresh(time){
-	setTimeout(multiRefresh, time || 3000);
+	setTimeout(multiRefresh, time || 5000);
 	setMapHeight();
 	getMarkersFromServer();
 	getLastCarPositions();
