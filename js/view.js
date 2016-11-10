@@ -33,16 +33,18 @@ function itemRemoveHover(id) {
 function openModal(pos, id) {
     var $modal = $('.modal'),
         $modalBack = $('.modal__back'),
-        $modalInput = $('.modal__input');
+        $modalInput = $('.modal__input'),
+        markerTitle = $('[data-id=' + id + ']').find('.point-list__name').text();
 
     if(pos == null) {
         $modal.data('marker-id', id);
         $modal.addClass('modal--edit');
+        $modalInput.val(markerTitle);
     } else {
         $modal.data('position', pos);
+        $modalInput.val('');
     }
     $modalBack.removeClass('hidden');
-    $modalInput.val('');
     $modalInput.focus();
 }
 

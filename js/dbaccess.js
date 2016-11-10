@@ -24,16 +24,22 @@ function insertMarker(pos, code){
 }
 
 //Добавление или обновление (если id == null) маркера в базе.
-function updateMarker(id, code, lat, lon){
-	var marker = new Marker(id, code, lat, lon, null);
-	var jsonObj = JSON.stringify(marker);
-	//console.log(marker);
-	$.ajax({
-       type: 'POST',
-       url: 'database/insertdata.php',
-       data: jsonObj,
-       dataType: 'json'
-	})
+function updateMarker(id, code, lat, lng){
+	var positionForGeocoder = {lat: parseFloat(lat), lng: parseFloat(lng)};
+
+	getAddress(positionForGeocoder, setMarkerAddress);
+
+	function setMarkerAddress(address) {
+		console.log('geo');
+		var marker = new Marker(id, code, lat, lng, address);
+		var jsonObj = JSON.stringify(marker);
+		$.ajax({
+			type: 'POST',
+			url: 'database/insertdata.php',
+			data: jsonObj,
+			dataType: 'json'
+		})
+	}
 }
 
 //Обновление позиции (lat, lon) по значению code
