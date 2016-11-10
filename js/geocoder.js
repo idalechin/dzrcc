@@ -1,13 +1,12 @@
 var geoInfowindow;
 var geocoder;
 var addr;
+
 function initGeocoder(){
 	geocoder = new google.maps.Geocoder;
 	gmap.addListener('rightclick', function(e) {
 		if(geoInfowindow){geoInfowindow.close()};
 		var pos = e.latLng;
-		//var res = getAddress(pos);
-		//alert(res);
 		showGeoInfo(pos);
 	});
 }
@@ -33,18 +32,18 @@ function showGeoInfo(pos){
 }
 
 function getAddress(position, callback){
-	var a = "0";
+	var a = ":(";
 	geocoder.geocode({'location': position}, function(results, status) {
 		if (status === google.maps.GeocoderStatus.OK) {
 			if (results[0]) {
 				a = results[0].address_components[1].short_name+", "+results[0].address_components[0].short_name;
-				callback(a);
 			} else {
-				window.alert('No results found');
+			    console.log("GEOCODER ERROR: No results found");
 		    }
 		} else {
-		    window.alert('Geocoder failed due to: ' + status);
+		    console.log("GEOCODER ERROR: Geocoder failed due to: " + status);
 		}
+		callback(a);
     });
 
 }

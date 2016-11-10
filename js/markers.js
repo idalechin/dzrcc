@@ -34,7 +34,7 @@ function refreshMarkersArray(data) {
                 if(code === ''||/^\d+$/i.test(code)){
                     marker.title = (code === '') ? a : val.code + ") " + marker.address;
                 } else {
-                    marker.title = code.replace(/^\d+[.)-]?/g, code.match(/^\d+/i)+".");
+                    marker.title = code.replace(/^\d+[,.-]?/g, code.match(/^\d+/i)+")");
                 }
                 marker.id = val.id;
                 markersIds.push(val.id);
