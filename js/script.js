@@ -20,11 +20,6 @@ $(function() {
 
 
 function multiRefresh(time){
-	/*if(teamData.length>0){
-		$('.team_data').each(function(indx, element){
-			$(this).text(teamData[indx]);
-		});
-	}*/
 	setTimeout(multiRefresh, time || 3000);
 	setMapHeight();
 	getMarkersFromServer();

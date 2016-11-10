@@ -50,9 +50,8 @@ function addTeamToList(id) {
 }
 
 function refreshTeamInList(id, time) {
-    var date = new Date(time*1000);
-    console.log(date.toUTCString());
-    //$('.team_data_' + id).text(date.format("dd.mm h:MM:ss"));
+    var date = new Date(parseInt(time));
+    $('.team_data_' + id).text(date.toLocaleString().match(/\s.+$/i)[0]);
 }
 
 //----------
