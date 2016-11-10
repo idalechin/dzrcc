@@ -27,17 +27,21 @@ function refreshMarkersArray(data) {
                 code: code
             });
 
-            marker.address = val.data;
-            if(code === ''||/^\d+$/i.test(code)){
-                marker.title = (code === '') ? marker.address : val.code + ") " + marker.address;
-            } else {
-                marker.title = code.replace(/^\d+[.)-]?/g, code.match(/^\d+/i)+".");
+            getAddress(marker.position, setMarkerAddress);
+
+            function setMarkerAddress(a) {
+                marker.address = a;
+                if(code === ''||/^\d+$/i.test(code)){
+                    marker.title = (code === '') ? a : val.code + ") " + marker.address;
+                } else {
+                    marker.title = code.replace(/^\d+[,.-]?/g, code.match(/^\d+/i)+")");
+                }
+                marker.id = val.id;
+                markersIds.push(val.id);
+                markers.push(marker);
+                setMarkerListeners(marker);
+                markerListRefresh();
             }
-            marker.id = val.id;
-            markersIds.push(val.id);
-            markers.push(marker);
-            setMarkerListeners(marker);
-            markerListRefresh();
         }
         dbMarkersIds.push(val.id);
     });
