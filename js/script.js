@@ -12,7 +12,7 @@ $(function() {
 	clickCloseModal();
 	carToCenter();
 	resizeWindowInit();
-	if($(window).width() < 1024){
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || $(window).width() < 1024) {
 		mobileButtonAction();
 		clickOutMobilePanel();
 	}
